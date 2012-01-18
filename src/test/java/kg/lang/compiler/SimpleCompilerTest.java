@@ -3,7 +3,7 @@ package kg.lang.compiler;
 import kg.lang.Lexer;
 import kg.lang.Node;
 import kg.lang.Parser;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.List;
 

@@ -1,13 +1,12 @@
 package kg.lang;
 
-import junit.framework.Assert;
-import org.junit.Test;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
+import org.testng.annotations.Test;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * TODO add description
@@ -27,12 +26,12 @@ public class LexerTest {
         Expression result4 = lexer.next();
         // then
         assertTrue(result1 instanceof ValueExpression);
-        Assert.assertEquals(((ValueExpression) result1).value, 5988l);
+        assertEquals(((ValueExpression) result1).value, 5988);
         assertTrue(result2 instanceof ValueExpression);
-        Assert.assertEquals(((ValueExpression) result2).value, 4l);
+        assertEquals(((ValueExpression) result2).value, 4);
         assertTrue(result3 instanceof ValueExpression);
-        Assert.assertEquals(((ValueExpression) result3).value, 20l);
-        Assert.assertEquals(result4, Expression.EOF);
+        assertEquals(((ValueExpression) result3).value, 20);
+        assertEquals(result4, Expression.EOF);
     }
 
     @Test

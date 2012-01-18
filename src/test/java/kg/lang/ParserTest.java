@@ -1,6 +1,6 @@
 package kg.lang;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.LinkedList;
 import java.util.List;

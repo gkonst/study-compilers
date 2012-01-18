@@ -94,7 +94,7 @@ public class VirtualMachine {
         System.out.println("Execution finished.");
         for (int i = 0; i < 26; i++) {
             if (var[i] != 0) {
-                System.out.printf("%c = %d", (char) (i + (int) 'a'), var[i]);
+                System.out.printf("%c = %d\n", (char) (i + (int) 'a'), var[i]);
             }
         }
     }
