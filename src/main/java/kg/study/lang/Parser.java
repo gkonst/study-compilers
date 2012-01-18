@@ -62,7 +62,7 @@ public class Parser {
             return compare();
         }
         Node node = compare();
-        if (node.type == Node.NodeType.VAR && currentExpression == Symbol.EQ) {
+        if (node.getType() == Node.NodeType.VAR && currentExpression == Symbol.EQ) {
             nextExpression();
             node = new Node(Node.NodeType.SET, node, expression());
         }

@@ -1,12 +1,13 @@
 package kg.study.lang;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Node {
-    public final NodeType type;
-    public Object value;
-    public List<Node> children;
+    private final NodeType type;
+    private Object value;
+    private List<Node> children;
 
     Node(NodeType type, Object value) {
         this.type = type;
@@ -15,7 +16,28 @@ public class Node {
 
     Node(NodeType type, Node... children) {
         this.type = type;
-        this.children = Arrays.asList(children);
+        this.children = Collections.unmodifiableList(Arrays.asList(children));
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public NodeType getType() {
+        return type;
+    }
+
+    public List<Node> getChildren() {
+        return children;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "type=" + type +
+                ", value=" + value +
+                ", children=" + children +
+                '}';
     }
 
     public enum NodeType {

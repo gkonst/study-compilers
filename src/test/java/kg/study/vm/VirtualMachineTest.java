@@ -11,14 +11,16 @@ import java.util.List;
 public class VirtualMachineTest {
     @Test
     public void testRun() throws Exception {
+        // given
         String given = "a = 3;";
         Parser parser = new Parser(new Lexer(given));
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         compiler.compile(nodes);
         List result = compiler.getProgram();
-        System.out.println(result);
         VirtualMachine vm = new VirtualMachine();
+        // when
         vm.run(result.toArray());
+        // then
     }
 }
