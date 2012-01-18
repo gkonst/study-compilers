@@ -1,17 +1,12 @@
 package kg.study.lang.compiler;
 
-import kg.study.lang.Lexer;
 import kg.study.lang.Node;
 import kg.study.lang.Parser;
+import kg.study.lang.lexer.Lexer;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-/**
- * TODO add description
- *
- * @author Konstantin_Grigoriev
- */
 public class SimpleCompilerTest {
     @Test
     public void testCompile() throws Exception {
@@ -20,7 +15,7 @@ public class SimpleCompilerTest {
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         compiler.compile(nodes);
-        List result = compiler.program;
+        List result = compiler.getProgram();
         System.out.println(result);
     }
 }

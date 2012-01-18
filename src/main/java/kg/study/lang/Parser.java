@@ -1,14 +1,16 @@
 package kg.study.lang;
 
-/**
- * TODO add description
- *
- * @author Konstantin_Grigoriev
- */
+import kg.study.lang.lexer.Expression;
+import kg.study.lang.lexer.Identifier;
+import kg.study.lang.lexer.Keyword;
+import kg.study.lang.lexer.Lexer;
+import kg.study.lang.lexer.Symbol;
+import kg.study.lang.lexer.ValueExpression;
+
 public class Parser {
 
-    Lexer lexer;
-    Expression currentExpression;
+    private final Lexer lexer;
+    private Expression currentExpression;
 
     public Parser(Lexer lexer) {
         this.lexer = lexer;
@@ -17,10 +19,10 @@ public class Parser {
     Node term() {
         Node node;
         if (currentExpression instanceof Identifier) {
-            node = new Node(Node.NodeType.VAR, ((Identifier) currentExpression).name);
+            node = new Node(Node.NodeType.VAR, ((Identifier) currentExpression).getName());
             nextExpression();
         } else if (currentExpression instanceof ValueExpression) {
-            node = new Node(Node.NodeType.CONST, ((ValueExpression) currentExpression).value);
+            node = new Node(Node.NodeType.CONST, ((ValueExpression) currentExpression).getValue());
             nextExpression();
         } else {
             node = paren();

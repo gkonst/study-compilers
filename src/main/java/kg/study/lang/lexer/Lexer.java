@@ -1,87 +1,9 @@
-package kg.study.lang;
-
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * TODO add description
- *
- * @author Konstantin_Grigoriev
- */
-enum Symbol implements Expression {
-    LBRA('{'),
-    RBRA('}'),
-    EQ('='),
-    SEMICOLON(';'),
-    LPAR('('),
-    RPAR(')'),
-    PLUS('+'),
-    MINUS('-'),
-    LESS('<');
-
-    char text;
-    public static Map<Character, Symbol> mapOfValues;
-
-    Symbol(char text) {
-        this.text = text;
-    }
-
-    public static Map<Character, Symbol> getMapOfValues() {
-        if (mapOfValues == null) {
-            mapOfValues = new HashMap<>();
-            for (Symbol symbol : values()) {
-                mapOfValues.put(symbol.text, symbol);
-            }
-        }
-        return mapOfValues;
-    }
-}
-
-enum Keyword implements Expression {
-    IF("if"),
-    ELSE("else"),
-    DO("do"),
-    WHILE("while");
-
-    String text;
-    public static Map<String, Keyword> mapOfValues;
-
-    Keyword(String text) {
-        this.text = text;
-    }
-
-    public static Map<String, Keyword> getMapOfValues() {
-        if (mapOfValues == null) {
-            mapOfValues = new HashMap<>();
-            for (Keyword symbol : values()) {
-                mapOfValues.put(symbol.text, symbol);
-            }
-        }
-        return mapOfValues;
-    }
-}
-
-class ValueExpression implements Expression {
-    Object value;
-
-    ValueExpression(Object value) {
-        this.value = value;
-    }
-}
-
-class Identifier implements Expression {
-    int name;
-
-    Identifier(int name) {
-        this.name = name;
-    }
-}
+package kg.study.lang.lexer;
 
 public class Lexer {
 
-
-    String source;
-    int position = 0;
+    private final String source;
+    private int position = 0;
 
     public Lexer(String source) {
         this.source = source;

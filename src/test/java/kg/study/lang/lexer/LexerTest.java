@@ -1,4 +1,4 @@
-package kg.study.lang;
+package kg.study.lang.lexer;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -8,11 +8,6 @@ import org.testng.annotations.Test;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * TODO add description
- *
- * @author Konstantin_Grigoriev
- */
 public class LexerTest {
     @Test
     public void nextShouldReturnValueExpression() {
@@ -26,11 +21,11 @@ public class LexerTest {
         Expression result4 = lexer.next();
         // then
         assertTrue(result1 instanceof ValueExpression);
-        assertEquals(((ValueExpression) result1).value, 5988);
+        assertEquals(((ValueExpression) result1).getValue(), 5988);
         assertTrue(result2 instanceof ValueExpression);
-        assertEquals(((ValueExpression) result2).value, 4);
+        assertEquals(((ValueExpression) result2).getValue(), 4);
         assertTrue(result3 instanceof ValueExpression);
-        assertEquals(((ValueExpression) result3).value, 20);
+        assertEquals(((ValueExpression) result3).getValue(), 20);
         assertEquals(result4, Expression.EOF);
     }
 
@@ -40,7 +35,7 @@ public class LexerTest {
         Lexer lexer = new Lexer(given);
         List<Expression> result = new LinkedList<>();
         Expression expression;
-        while((expression = lexer.next()) != Expression.EOF){
+        while ((expression = lexer.next()) != Expression.EOF) {
             result.add(expression);
         }
         System.out.println(result);

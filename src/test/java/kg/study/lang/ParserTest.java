@@ -1,12 +1,8 @@
 package kg.study.lang;
 
+import kg.study.lang.lexer.Lexer;
 import org.testng.annotations.Test;
 
-/**
- * TODO add description
- *
- * @author Konstantin_Grigoriev
- */
 public class ParserTest {
     @Test
     public void parseShouldNotFail() throws Exception {

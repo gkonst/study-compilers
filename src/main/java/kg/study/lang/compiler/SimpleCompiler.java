@@ -7,14 +7,9 @@ import kg.study.lang.Node;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * TODO add description
- *
- * @author Konstantin_Grigoriev
- */
 public class SimpleCompiler implements Compiler {
-    public List program = new LinkedList();
-    int pc = 0;
+    private final List program = new LinkedList();
+    private int pc = 0;
 
     void gen(Object command) {
         program.add(command);
@@ -108,4 +103,7 @@ public class SimpleCompiler implements Compiler {
         }
     }
 
+    public List getProgram() {
+        return program;
+    }
 }

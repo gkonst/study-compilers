@@ -3,11 +3,6 @@ package kg.study.vm;
 import java.util.Arrays;
 import java.util.Stack;
 
-/**
- * TODO add description
- *
- * @author Konstantin_Grigoriev
- */
 public class VirtualMachine {
 
     public void run(Object[] instructions) {
