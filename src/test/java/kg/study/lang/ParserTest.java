@@ -11,34 +11,59 @@ import org.testng.annotations.Test;
 
 public class ParserTest {
 
+    public static final int A_CODE = 0;
+
     @Test
     public void parseShouldNotFail() throws Exception {
         // given
-        String given = "if (a < 0) a = 5;";
+        String given = " { a = 3; if (a < 0) a = 5; }";
         Parser parser = new Parser(new Lexer(given));
         // when
         Node result = parser.parse();
         // then
         assertEquals(result.getType(), Node.NodeType.PROGRAM);
         assertThat(result.getChildren(), hasSize(1));
-        Node ifNode = result.getChildren().get(0);
+        Node seqNode = result.getChildren().get(0);
+        assertSeqNode(seqNode, 2);
+        //  assert inner seq node
+        Node innerSeqNode = seqNode.getChildren().get(0);
+        assertSeqNode(innerSeqNode, 2);
+        assertEmptyNode(innerSeqNode.getChildren().get(0));
+        Node exprNode = innerSeqNode.getChildren().get(1);
+        assertExprNode(exprNode, A_CODE, 3);
+        //  assert if node
+        Node ifNode = seqNode.getChildren().get(1);
         assertEquals(ifNode.getType(), Node.NodeType.IF);
         assertThat(ifNode.getChildren(), hasSize(2));
-        //  assert lt node
+        //   assert lt node
         Node ltNode = ifNode.getChildren().get(0);
         assertEquals(ltNode.getType(), Node.NodeType.LT);
         assertThat(ltNode.getChildren(), hasSize(2));
-        assertVarNode(ltNode.getChildren().get(0), 0);
+        assertVarNode(ltNode.getChildren().get(0), A_CODE);
         assertConstNode(ltNode.getChildren().get(1), 0);
-        //  assert expr node
-        Node exprNode = ifNode.getChildren().get(1);
+        //   assert expr node
+        exprNode = ifNode.getChildren().get(1);
+        assertExprNode(exprNode, A_CODE, 5);
+    }
+
+    private static void assertEmptyNode(Node emptyNode) {
+        assertEquals(emptyNode.getType(), Node.NodeType.EMPTY);
+        assertThat(emptyNode.getChildren(), is(nullValue()));
+    }
+
+    private static void assertExprNode(Node exprNode, int code, int value) {
         assertEquals(exprNode.getType(), Node.NodeType.EXPR);
         assertThat(exprNode.getChildren(), hasSize(1));
         Node setNode = exprNode.getChildren().get(0);
         assertEquals(setNode.getType(), Node.NodeType.SET);
         assertThat(setNode.getChildren(), hasSize(2));
-        assertVarNode(setNode.getChildren().get(0), 0);
-        assertConstNode(setNode.getChildren().get(1), 5);
+        assertVarNode(setNode.getChildren().get(0), code);
+        assertConstNode(setNode.getChildren().get(1), value);
+    }
+
+    private static void assertSeqNode(Node seqNode, int size) {
+        assertEquals(seqNode.getType(), Node.NodeType.SEQ);
+        assertThat(seqNode.getChildren(), hasSize(size));
     }
 
     private static void assertConstNode(Node constNode, int value) {

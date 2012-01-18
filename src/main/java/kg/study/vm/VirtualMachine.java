@@ -1,14 +1,21 @@
 package kg.study.vm;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.Stack;
 
 public class VirtualMachine {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(VirtualMachine.class);
+
+    private int[] var;
+
     public void run(Object[] instructions) {
         boolean isRunning = true;
         Stack<Integer> stack = new Stack<>();
-        int[] var = new int[26];
+        var = new int[26];
         Arrays.fill(var, 0);
         int pc = 0;
         while (isRunning) {
@@ -84,13 +91,25 @@ public class VirtualMachine {
                     isRunning = false;
                     break;
             }
-            System.out.println(instruction + " : " + stack);
+            LOGGER.debug("{} : {}", instruction, stack);
         }
-        System.out.println("Execution finished.");
+        LOGGER.info("Execution finished.");
         for (int i = 0; i < 26; i++) {
             if (var[i] != 0) {
-                System.out.printf("%c = %d\n", (char) (i + (int) 'a'), var[i]);
+                LOGGER.debug("{} = {}", indexToName(i), var[i]);
             }
         }
+    }
+
+    public int[] getVar() {
+        return var;
+    }
+
+    public static char indexToName(int index) {
+        return (char) (index + (int) 'a');
+    }
+
+    public static int nameToIndex(char name) {
+        return (int) name - (int) 'a';
     }
 }

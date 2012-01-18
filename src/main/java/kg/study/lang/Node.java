@@ -9,6 +9,10 @@ public class Node {
     private Object value;
     private List<Node> children;
 
+    Node(NodeType type) {
+        this.type = type;
+    }
+
     Node(NodeType type, Object value) {
         this.type = type;
         this.value = value;

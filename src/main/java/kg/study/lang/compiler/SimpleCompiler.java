@@ -4,6 +4,7 @@ import static kg.study.vm.VMInstruction.*;
 
 import kg.study.lang.Node;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,12 +99,15 @@ public class SimpleCompiler implements Compiler {
                 compile(node.getChildren().get(0));
                 gen(HALT);
                 break;
+            case EMPTY:
+                // nothing to do
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown node : " + node);
         }
     }
 
     public List getProgram() {
-        return program;
+        return Collections.unmodifiableList(program);
     }
 }

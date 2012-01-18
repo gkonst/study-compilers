@@ -10,6 +10,7 @@ import kg.study.lang.lexer.Lexer;
 import kg.study.vm.VMInstruction;
 import org.testng.annotations.Test;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class SimpleCompilerTest {
@@ -17,7 +18,7 @@ public class SimpleCompilerTest {
     @Test
     public void compileShouldNotFail() throws Exception {
         // given
-        String given = "if (a < 0) a = 5;";
+        String given = " { a = 3; if (a < 0) a = 5; }";
         Parser parser = new Parser(new Lexer(given));
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
@@ -26,19 +27,29 @@ public class SimpleCompilerTest {
         // then
         List<?> result = compiler.getProgram();
         System.out.println(result);
-        assertThat(result, hasSize(13));
-        assertEquals(result.get(0), VMInstruction.IFETCH);
-        assertEquals(result.get(1), 0);
-        assertEquals(result.get(2), VMInstruction.IPUSH);
-        assertEquals(result.get(3), 0);
-        assertEquals(result.get(4), VMInstruction.ILT);
-        assertEquals(result.get(5), VMInstruction.JZ);
-        assertEquals(result.get(6), 12);
-        assertEquals(result.get(7), VMInstruction.IPUSH);
-        assertEquals(result.get(8), 5);
-        assertEquals(result.get(9), VMInstruction.ISTORE);
-        assertEquals(result.get(10), 0);
-        assertEquals(result.get(11), VMInstruction.IPOP);
-        assertEquals(result.get(12), VMInstruction.HALT);
+        assertThat(result, hasSize(18));
+        Iterator it = result.iterator();
+        assertNextValue(it, VMInstruction.IPUSH);
+        assertNextValue(it, 3);
+        assertNextValue(it, VMInstruction.ISTORE);
+        assertNextValue(it, 0);
+        assertNextValue(it, VMInstruction.IPOP);
+        assertNextValue(it, VMInstruction.IFETCH);
+        assertNextValue(it, 0);
+        assertNextValue(it, VMInstruction.IPUSH);
+        assertNextValue(it, 0);
+        assertNextValue(it, VMInstruction.ILT);
+        assertNextValue(it, VMInstruction.JZ);
+        assertNextValue(it, 17);
+        assertNextValue(it, VMInstruction.IPUSH);
+        assertNextValue(it, 5);
+        assertNextValue(it, VMInstruction.ISTORE);
+        assertNextValue(it, 0);
+        assertNextValue(it, VMInstruction.IPOP);
+        assertNextValue(it, VMInstruction.HALT);
+    }
+
+    private static void assertNextValue(Iterator iterator, Object value) {
+        assertEquals(iterator.next(), value);
     }
 }

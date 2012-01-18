@@ -16,7 +16,7 @@ public class Parser {
         this.lexer = lexer;
     }
 
-    Node term() {
+    private Node term() {
         Node node;
         if (currentExpression instanceof Identifier) {
             node = new Node(Node.NodeType.VAR, ((Identifier) currentExpression).getName());
@@ -34,7 +34,7 @@ public class Parser {
         currentExpression = lexer.next();
     }
 
-    Node compare() {
+    private Node compare() {
         Node node = sum();
         if (currentExpression == Symbol.LESS) {
             nextExpression();
@@ -43,7 +43,7 @@ public class Parser {
         return node;
     }
 
-    Node sum() {
+    private Node sum() {
         Node node = term();
         while (currentExpression == Symbol.PLUS || currentExpression == Symbol.MINUS) {
             if (currentExpression == Symbol.PLUS) {
@@ -57,7 +57,7 @@ public class Parser {
         return node;
     }
 
-    Node expression() {
+    private Node expression() {
         if (!(currentExpression instanceof Identifier)) {
             return compare();
         }
@@ -69,7 +69,7 @@ public class Parser {
         return node;
     }
 
-    Node paren() {
+    private Node paren() {
         if (currentExpression != Symbol.LPAR) {
             throw new IllegalArgumentException("'(' expected");
         }
@@ -82,7 +82,7 @@ public class Parser {
         return node;
     }
 
-    Node statement() {
+    private Node statement() {
         Node node;
         if (currentExpression == Keyword.IF) {
             nextExpression();
