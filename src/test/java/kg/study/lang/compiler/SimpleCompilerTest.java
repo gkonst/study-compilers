@@ -1,8 +1,8 @@
-package kg.lang.compiler;
+package kg.study.lang.compiler;
 
-import kg.lang.Lexer;
-import kg.lang.Node;
-import kg.lang.Parser;
+import kg.study.lang.Lexer;
+import kg.study.lang.Node;
+import kg.study.lang.Parser;
 import org.testng.annotations.Test;
 
 import java.util.List;

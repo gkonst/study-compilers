@@ -1,4 +1,4 @@
-package kg.vm;
+package kg.study.vm;
 
 /**
 * TODO add description

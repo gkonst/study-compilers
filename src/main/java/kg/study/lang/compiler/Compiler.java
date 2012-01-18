@@ -1,6 +1,6 @@
-package kg.lang.compiler;
+package kg.study.lang.compiler;
 
-import kg.lang.Node;
+import kg.study.lang.Node;
 
 /**
  * TODO add description

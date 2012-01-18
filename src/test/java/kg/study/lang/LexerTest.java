@@ -1,4 +1,4 @@
-package kg.lang;
+package kg.study.lang;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

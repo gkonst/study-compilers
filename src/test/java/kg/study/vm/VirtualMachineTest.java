@@ -1,11 +1,10 @@
-package kg.vm;
+package kg.study.vm;
 
-import kg.lang.Lexer;
-import kg.lang.Node;
-import kg.lang.Parser;
-import kg.lang.compiler.SimpleCompiler;
+import kg.study.lang.Lexer;
+import kg.study.lang.Node;
+import kg.study.lang.Parser;
+import kg.study.lang.compiler.SimpleCompiler;
 import org.testng.annotations.Test;
-import kg.vm.VirtualMachine;
 
 import java.util.List;
 

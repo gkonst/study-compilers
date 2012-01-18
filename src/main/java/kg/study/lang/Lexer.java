@@ -1,4 +1,4 @@
-package kg.lang;
+package kg.study.lang;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -114,12 +114,13 @@ public class Lexer {
                 if (Keyword.getMapOfValues().containsKey(word)) {
                     result = Keyword.getMapOfValues().get(word);
                 } else if (word.length() == 1) {
-                    result = new Identifier(word.charAt(0) - (int)'a');
+                    result = new Identifier(word.charAt(0) - (int) 'a');
                 } else {
                     throw new IllegalArgumentException("Unexpected word : " + word);
                 }
             } else {
-                throw new IllegalArgumentException("Unexpected character : " + currChar() + " at position : " + position);
+                throw new IllegalArgumentException(
+                        "Unexpected character : " + currChar() + " at position : " + position);
             }
         }
         return result;

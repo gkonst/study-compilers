@@ -1,12 +1,4 @@
-package kg.lang;
-
-import kg.lang.Expression;
-import kg.lang.Identifier;
-import kg.lang.Keyword;
-import kg.lang.Lexer;
-import kg.lang.Node;
-import kg.lang.Symbol;
-import kg.lang.ValueExpression;
+package kg.study.lang;
 
 /**
  * TODO add description

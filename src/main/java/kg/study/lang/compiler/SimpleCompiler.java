@@ -1,11 +1,11 @@
-package kg.lang.compiler;
+package kg.study.lang.compiler;
 
-import kg.lang.Node;
+import static kg.study.vm.VMInstruction.*;
+
+import kg.study.lang.Node;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import static kg.vm.VMInstruction.*;
 
 /**
  * TODO add description

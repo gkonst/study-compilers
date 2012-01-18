@@ -1,9 +1,6 @@
-package kg.lang;
+package kg.study.lang;
 
 import org.testng.annotations.Test;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * TODO add description

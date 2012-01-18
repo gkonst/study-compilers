@@ -1,13 +1,13 @@
-package kg.lang;
+package kg.study.lang;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
-* TODO add description
-*
-* @author Konstantin_Grigoriev
-*/
+ * TODO add description
+ *
+ * @author Konstantin_Grigoriev
+ */
 public class Node {
     public final NodeType type;
     public Object value;

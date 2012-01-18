@@ -1,4 +1,4 @@
-package kg.vm;
+package kg.study.vm;
 
 import java.util.Arrays;
 import java.util.Stack;
