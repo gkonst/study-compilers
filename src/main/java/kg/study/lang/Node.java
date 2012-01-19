@@ -2,12 +2,13 @@ package kg.study.lang;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Node {
     private final NodeType type;
     private Object value;
-    private List<Node> children;
+    private List<Node> children = new LinkedList<>();
 
     Node(NodeType type) {
         this.type = type;
@@ -20,7 +21,7 @@ public class Node {
 
     Node(NodeType type, Node... children) {
         this.type = type;
-        this.children = Collections.unmodifiableList(Arrays.asList(children));
+        this.children = Arrays.asList(children);
     }
 
     public Object getValue() {
@@ -32,19 +33,22 @@ public class Node {
     }
 
     public List<Node> getChildren() {
-        return children;
+        return Collections.unmodifiableList(children);
+    }
+
+    public void addChild(Node node) {
+        children.add(node);
     }
 
     @Override
     public String toString() {
-        return "Node{" +
-                "type=" + type +
-                ", value=" + value +
-                ", children=" + children +
+        return "Node{" + type +
+                ", " + value +
+                ", " + children +
                 '}';
     }
 
     public enum NodeType {
-        VAR, CONST, ADD, SUB, LT, SET, IF, IFELSE, WHILE, DO, EMPTY, SEQ, EXPR, PROGRAM
+        VAR, CONST, ADD, SUB, LT, SET, IF, IFELSE, WHILE, DO, EMPTY, SEQ, EXPR, PROGRAM, PRINT
     }
 }

@@ -87,8 +87,9 @@ public class SimpleCompiler implements Compiler {
                 gen(addr);
                 break;
             case SEQ:
-                compile(node.getChildren().get(0));
-                compile(node.getChildren().get(1));
+                for (Node child : node.getChildren()) {
+                    compile(child);
+                }
                 break;
             case EXPR:
                 compile(node.getChildren().get(0));
@@ -101,6 +102,12 @@ public class SimpleCompiler implements Compiler {
                 break;
             case EMPTY:
                 // nothing to do
+                break;
+            case PRINT:
+                gen(IFETCH);
+                gen(node.getChildren().get(0).getValue());
+                gen(PRINT);
+                gen(IPOP);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown node : " + node);

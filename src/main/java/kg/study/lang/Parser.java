@@ -112,12 +112,15 @@ public class Parser {
             node = new Node(Node.NodeType.EMPTY);
             nextExpression();
         } else if (currentExpression == Symbol.LBRA) {
-            node = new Node(Node.NodeType.EMPTY);
+            node = new Node(Node.NodeType.SEQ);
             nextExpression();
             while (currentExpression != Symbol.RBRA) {
-                node = new Node(Node.NodeType.SEQ, node, statement());
+                node.addChild(statement());
             }
             nextExpression();
+        } else if (currentExpression == Keyword.PRINT) {
+            nextExpression();
+            node = new Node(Node.NodeType.PRINT, new Node[]{paren()});
         } else {
             node = new Node(Node.NodeType.EXPR, new Node[]{expression()});
             if (currentExpression != Symbol.SEMICOLON) {

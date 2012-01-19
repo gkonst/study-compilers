@@ -2,8 +2,6 @@ package kg.study.lang;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.testng.Assert.assertEquals;
 
 import kg.study.lang.lexer.Lexer;
@@ -16,20 +14,18 @@ public class ParserTest {
     @Test
     public void parseShouldNotFail() throws Exception {
         // given
-        String given = " { a = 3; if (a < 0) a = 5; }";
+        String given = " { a = 3; if (a < 0) a = 5; print(a);}";
         Parser parser = new Parser(new Lexer(given));
         // when
         Node result = parser.parse();
         // then
+        System.out.println(result);
         assertEquals(result.getType(), Node.NodeType.PROGRAM);
         assertThat(result.getChildren(), hasSize(1));
         Node seqNode = result.getChildren().get(0);
-        assertSeqNode(seqNode, 2);
+        assertSeqNode(seqNode, 4);
         //  assert inner seq node
-        Node innerSeqNode = seqNode.getChildren().get(0);
-        assertSeqNode(innerSeqNode, 2);
-        assertEmptyNode(innerSeqNode.getChildren().get(0));
-        Node exprNode = innerSeqNode.getChildren().get(1);
+        Node exprNode = seqNode.getChildren().get(0);
         assertExprNode(exprNode, A_CODE, 3);
         //  assert if node
         Node ifNode = seqNode.getChildren().get(1);
@@ -44,11 +40,20 @@ public class ParserTest {
         //   assert expr node
         exprNode = ifNode.getChildren().get(1);
         assertExprNode(exprNode, A_CODE, 5);
+        Node printNode = seqNode.getChildren().get(2);
+        assertPrintNode(printNode, A_CODE);
+        assertEmptyNode(seqNode.getChildren().get(3));
+    }
+
+    private static void assertPrintNode(Node printNode, int code) {
+        assertEquals(printNode.getType(), Node.NodeType.PRINT);
+        assertThat(printNode.getChildren(), hasSize(1));
+        assertVarNode(printNode.getChildren().get(0), code);
     }
 
     private static void assertEmptyNode(Node emptyNode) {
         assertEquals(emptyNode.getType(), Node.NodeType.EMPTY);
-        assertThat(emptyNode.getChildren(), is(nullValue()));
+        assertThat(emptyNode.getChildren(), hasSize(0));
     }
 
     private static void assertExprNode(Node exprNode, int code, int value) {
@@ -69,12 +74,12 @@ public class ParserTest {
     private static void assertConstNode(Node constNode, int value) {
         assertEquals(constNode.getType(), Node.NodeType.CONST);
         assertEquals(constNode.getValue(), value);
-        assertThat(constNode.getChildren(), is(nullValue()));
+        assertThat(constNode.getChildren(), hasSize(0));
     }
 
-    private static void assertVarNode(Node varNode, int value) {
+    private static void assertVarNode(Node varNode, int code) {
         assertEquals(varNode.getType(), Node.NodeType.VAR);
-        assertEquals(varNode.getValue(), value);
-        assertThat(varNode.getChildren(), is(nullValue()));
+        assertEquals(varNode.getValue(), code);
+        assertThat(varNode.getChildren(), hasSize(0));
     }
 }

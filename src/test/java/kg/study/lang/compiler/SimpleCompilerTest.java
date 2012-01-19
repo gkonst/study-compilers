@@ -18,7 +18,7 @@ public class SimpleCompilerTest {
     @Test
     public void compileShouldNotFail() throws Exception {
         // given
-        String given = " { a = 3; if (a < 0) a = 5; }";
+        String given = " { a = 3; if (a < 0) a = 5; print(a); }";
         Parser parser = new Parser(new Lexer(given));
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
@@ -27,7 +27,7 @@ public class SimpleCompilerTest {
         // then
         List<?> result = compiler.getProgram();
         System.out.println(result);
-        assertThat(result, hasSize(18));
+        assertThat(result, hasSize(22));
         Iterator it = result.iterator();
         assertNextValue(it, VMInstruction.IPUSH);
         assertNextValue(it, 3);
@@ -45,6 +45,10 @@ public class SimpleCompilerTest {
         assertNextValue(it, 5);
         assertNextValue(it, VMInstruction.ISTORE);
         assertNextValue(it, 0);
+        assertNextValue(it, VMInstruction.IPOP);
+        assertNextValue(it, VMInstruction.IFETCH);
+        assertNextValue(it, 0);
+        assertNextValue(it, VMInstruction.PRINT);
         assertNextValue(it, VMInstruction.IPOP);
         assertNextValue(it, VMInstruction.HALT);
     }

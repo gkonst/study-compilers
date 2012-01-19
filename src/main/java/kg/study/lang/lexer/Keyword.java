@@ -7,7 +7,8 @@ public enum Keyword implements Expression {
     IF("if"),
     ELSE("else"),
     DO("do"),
-    WHILE("while");
+    WHILE("while"),
+    PRINT("print");
 
     private final String text;
     private static Map<String, Keyword> mapOfValues;

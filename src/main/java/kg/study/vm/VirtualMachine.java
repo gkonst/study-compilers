@@ -87,9 +87,16 @@ public class VirtualMachine {
                     pc = (Integer) arg;
                     break;
                 }
+                case PRINT: {
+                    System.out.println(stack.peek());
+                    pc += 1;
+                    break;
+                }
                 case HALT:
                     isRunning = false;
                     break;
+                default:
+                    throw new UnsupportedOperationException("Unknown instruction : " + instruction);
             }
             LOGGER.debug("{} : {}", instruction, stack);
         }
