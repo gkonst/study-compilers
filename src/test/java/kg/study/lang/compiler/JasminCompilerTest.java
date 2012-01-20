@@ -3,6 +3,12 @@ package kg.study.lang.compiler;
 import kg.study.lang.Node;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+
 public class JasminCompilerTest {
     @Test
     public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {
@@ -12,6 +18,7 @@ public class JasminCompilerTest {
         // when
         compiler.compile(node);
         // then
-        System.out.println(compiler.getProgram());
+        assertThat(compiler.getProgram(), is(notNullValue()));
+        assertThat(compiler.getProgram(), is(not(equalTo(""))));
     }
 }
