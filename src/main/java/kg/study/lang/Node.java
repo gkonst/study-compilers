@@ -10,7 +10,7 @@ public class Node {
     private Object value;
     private List<Node> children = new LinkedList<>();
 
-    Node(NodeType type) {
+    public Node(NodeType type) {
         this.type = type;
     }
 
