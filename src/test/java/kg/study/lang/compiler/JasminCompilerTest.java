@@ -10,6 +10,14 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class JasminCompilerTest {
+
+    public static final Node SET_AND_PRINT_NODE = new Node(Node.NodeType.PROGRAM, new Node[]{new Node(Node.NodeType.SEQ, new Node[]{
+            new Node(Node.NodeType.SET,
+                    new Node(Node.NodeType.VAR, 0),
+                    new Node(Node.NodeType.CONST, 3)),
+            new Node(Node.NodeType.PRINT,
+                    new Node[]{new Node(Node.NodeType.VAR, 0)})})});
+
     @Test
     public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {
         // given
@@ -18,7 +26,22 @@ public class JasminCompilerTest {
         // when
         compiler.compile(node);
         // then
-        assertThat(compiler.getProgram(), is(notNullValue()));
-        assertThat(compiler.getProgram(), is(not(equalTo(""))));
+        String result = compiler.getProgram();
+        System.out.println(result);
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(not(equalTo(""))));
+    }
+
+    @Test
+    public void compileShouldNotFailIfSetAndPrintGive() throws Exception {
+        // given
+        JasminCompiler compiler = new JasminCompiler();
+        // when
+        compiler.compile(SET_AND_PRINT_NODE);
+        // then
+        String result = compiler.getProgram();
+        System.out.println(result);
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is(not(equalTo(""))));
     }
 }

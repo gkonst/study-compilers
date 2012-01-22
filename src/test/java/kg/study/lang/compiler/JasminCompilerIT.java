@@ -4,6 +4,7 @@ import jasmin.Main;
 import kg.study.lang.Node;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -33,7 +34,7 @@ public class JasminCompilerIT {
     }
 
     @Test
-    public void compileShouldNotFail() throws Exception {
+    public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {
         // given
         JasminCompiler compiler = new JasminCompiler();
         Node node = new Node(Node.NodeType.PROGRAM);
@@ -44,6 +45,25 @@ public class JasminCompilerIT {
         // when
         assemble(classFile.getAbsolutePath(), TEST_DIR.getPath());
         Class clazz = classLoader.loadClass(CLASS_NAME);
+        MethodUtils.invokeStaticMethod(clazz, "main", new String[][]{new String[]{}});
+        // then
+        assertThat(clazz, is(notNullValue()));
+    }
+
+    @Test
+    public void compileShouldNotFailIfSetAndPrintGive() throws Exception {
+        // given
+        JasminCompiler compiler = new JasminCompiler();
+        // when
+        compiler.compile(JasminCompilerTest.SET_AND_PRINT_NODE);
+        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{TEST_DIR.toURI().toURL()});
+        File classFile = new File(TEST_DIR, CLASS_FILE_NAME);
+        System.out.println(compiler.getProgram());
+        FileUtils.writeStringToFile(classFile, compiler.getProgram());
+        // when
+        assemble(classFile.getAbsolutePath(), TEST_DIR.getPath());
+        Class clazz = classLoader.loadClass(CLASS_NAME);
+        MethodUtils.invokeStaticMethod(clazz, "main", new String[][]{new String[]{}});
         // then
         assertThat(clazz, is(notNullValue()));
     }

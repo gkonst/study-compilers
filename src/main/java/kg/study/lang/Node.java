@@ -14,12 +14,12 @@ public class Node {
         this.type = type;
     }
 
-    Node(NodeType type, Object value) {
+    public Node(NodeType type, Object value) {
         this.type = type;
         this.value = value;
     }
 
-    Node(NodeType type, Node... children) {
+    public Node(NodeType type, Node... children) {
         this.type = type;
         this.children = Arrays.asList(children);
     }
@@ -46,6 +46,20 @@ public class Node {
                 ", " + value +
                 ", " + children +
                 '}';
+    }
+
+    public static interface NodeFilter {
+        boolean accept(Node node);
+    }
+
+    public int count(NodeFilter filter) {
+        int result = 1;
+        for (Node node : children) {
+            if (filter.accept(node)) {
+                result += node.count(filter);
+            }
+        }
+        return result;
     }
 
     public enum NodeType {
