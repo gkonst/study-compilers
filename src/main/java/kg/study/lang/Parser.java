@@ -19,10 +19,10 @@ public class Parser {
     private Node term() {
         Node node;
         if (currentExpression instanceof Identifier) {
-            node = new Node(Node.NodeType.VAR, ((Identifier) currentExpression).getName());
+            node = new Node(NodeType.VAR, ((Identifier) currentExpression).getName());
             nextExpression();
         } else if (currentExpression instanceof ValueExpression) {
-            node = new Node(Node.NodeType.CONST, ((ValueExpression) currentExpression).getValue());
+            node = new Node(NodeType.CONST, ((ValueExpression) currentExpression).getValue());
             nextExpression();
         } else {
             node = paren();
@@ -38,7 +38,7 @@ public class Parser {
         Node node = sum();
         if (currentExpression == Symbol.LESS) {
             nextExpression();
-            node = new Node(Node.NodeType.LT, node, sum());
+            node = new Node(NodeType.LT, node, sum());
         }
         return node;
     }
@@ -48,10 +48,10 @@ public class Parser {
         while (currentExpression == Symbol.PLUS || currentExpression == Symbol.MINUS) {
             if (currentExpression == Symbol.PLUS) {
                 nextExpression();
-                node = new Node(Node.NodeType.ADD, node, term());
+                node = new Node(NodeType.ADD, node, term());
             } else {
                 nextExpression();
-                node = new Node(Node.NodeType.SUB, node, term());
+                node = new Node(NodeType.SUB, node, term());
             }
         }
         return node;
@@ -62,9 +62,9 @@ public class Parser {
             return compare();
         }
         Node node = compare();
-        if (node.getType() == Node.NodeType.VAR && currentExpression == Symbol.EQ) {
+        if (node.getType() == NodeType.VAR && currentExpression == Symbol.EQ) {
             nextExpression();
-            node = new Node(Node.NodeType.SET, node, expression());
+            node = new Node(NodeType.SET, node, expression());
         }
         return node;
     }
@@ -90,13 +90,13 @@ public class Parser {
                 Node parenNode = paren();
                 Node statementNode = statement();
                 nextExpression();
-                node = new Node(Node.NodeType.IFELSE, parenNode, statementNode, statement());
+                node = new Node(NodeType.IFELSE, parenNode, statementNode, statement());
             } else {
-                node = new Node(Node.NodeType.IF, paren(), statement());
+                node = new Node(NodeType.IF, paren(), statement());
             }
         } else if (currentExpression == Keyword.WHILE) {
             nextExpression();
-            node = new Node(Node.NodeType.WHILE, paren(), statement());
+            node = new Node(NodeType.WHILE, paren(), statement());
         } else if (currentExpression == Keyword.DO) {
             nextExpression();
             Node statement = statement();
@@ -107,12 +107,12 @@ public class Parser {
             if (currentExpression != Symbol.SEMICOLON) {
                 throw new IllegalArgumentException("';' expected");
             }
-            node = new Node(Node.NodeType.DO, statement, paren());
+            node = new Node(NodeType.DO, statement, paren());
         } else if (currentExpression == Symbol.SEMICOLON) {
-            node = new Node(Node.NodeType.EMPTY);
+            node = new Node(NodeType.EMPTY);
             nextExpression();
         } else if (currentExpression == Symbol.LBRA) {
-            node = new Node(Node.NodeType.SEQ);
+            node = new Node(NodeType.SEQ);
             nextExpression();
             while (currentExpression != Symbol.RBRA) {
                 node.addChild(statement());
@@ -120,9 +120,9 @@ public class Parser {
             nextExpression();
         } else if (currentExpression == Keyword.PRINT) {
             nextExpression();
-            node = new Node(Node.NodeType.PRINT, new Node[]{paren()});
+            node = new Node(NodeType.PRINT, new Node[]{paren()});
         } else {
-            node = new Node(Node.NodeType.EXPR, new Node[]{expression()});
+            node = new Node(NodeType.EXPR, new Node[]{expression()});
             if (currentExpression != Symbol.SEMICOLON) {
                 throw new IllegalArgumentException("';' expected");
             }
@@ -134,7 +134,7 @@ public class Parser {
 
     public Node parse() {
         nextExpression();
-        Node node = new Node(Node.NodeType.PROGRAM, new Node[]{statement()});
+        Node node = new Node(NodeType.PROGRAM, new Node[]{statement()});
         if (currentExpression != Expression.EOF) {
             throw new IllegalArgumentException("Invalid statement syntax");
         }

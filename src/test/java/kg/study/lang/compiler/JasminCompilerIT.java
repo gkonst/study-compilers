@@ -1,7 +1,12 @@
 package kg.study.lang.compiler;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+
 import jasmin.Main;
 import kg.study.lang.Node;
+import kg.study.lang.NodeType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -12,10 +17,6 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 public class JasminCompilerIT {
 
@@ -37,7 +38,7 @@ public class JasminCompilerIT {
     public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {
         // given
         JasminCompiler compiler = new JasminCompiler();
-        Node node = new Node(Node.NodeType.PROGRAM);
+        Node node = new Node(NodeType.PROGRAM);
         compiler.compile(node);
         URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{TEST_DIR.toURI().toURL()});
         File classFile = new File(TEST_DIR, CLASS_FILE_NAME);

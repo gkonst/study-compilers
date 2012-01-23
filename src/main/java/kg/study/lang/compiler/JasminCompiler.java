@@ -1,6 +1,7 @@
 package kg.study.lang.compiler;
 
 import kg.study.lang.Node;
+import kg.study.lang.NodeType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class JasminCompiler implements Compiler {
         return node.count(new Node.NodeFilter() {
             @Override
             public boolean accept(Node node) {
-                return node.getType() == Node.NodeType.SET;
+                return node.getType() == NodeType.SET;
             }
         });
     }
