@@ -48,16 +48,10 @@ public class Node {
                 '}';
     }
 
-    public static interface NodeFilter {
-        boolean accept(Node node);
-    }
-
-    public int count(NodeFilter filter) {
+    public int count() {
         int result = 1;
         for (Node node : children) {
-            if (filter.accept(node)) {
-                result += node.count(filter);
-            }
+            result += node.count();
         }
         return result;
     }
