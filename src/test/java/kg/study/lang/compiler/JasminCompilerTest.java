@@ -1,29 +1,29 @@
 package kg.study.lang.compiler;
 
+import static kg.study.lang.ast.NodeFactory.constant;
+import static kg.study.lang.ast.NodeFactory.print;
+import static kg.study.lang.ast.NodeFactory.program;
+import static kg.study.lang.ast.NodeFactory.seq;
+import static kg.study.lang.ast.NodeFactory.set;
+import static kg.study.lang.ast.NodeFactory.var;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
-import kg.study.lang.Node;
-import kg.study.lang.NodeType;
+import kg.study.lang.ast.Node;
 import org.testng.annotations.Test;
 
 public class JasminCompilerTest {
 
-    public static final Node SET_AND_PRINT_NODE = new Node(NodeType.PROGRAM,
-            new Node[]{new Node(NodeType.SEQ, new Node[]{
-                    new Node(NodeType.SET,
-                            new Node(NodeType.VAR, 0),
-                            new Node(NodeType.CONST, 3)),
-                    new Node(NodeType.PRINT,
-                            new Node[]{new Node(NodeType.VAR, 0)})})});
+    public static final Node SET_AND_PRINT_NODE = program(
+            seq(set(var(0), constant(3)), print(var(0))));
 
     @Test
     public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {
         // given
-        Node node = new Node(NodeType.PROGRAM);
+        Node node = program(null);
         JasminCompiler compiler = new JasminCompiler();
         // when
         compiler.compile(node);

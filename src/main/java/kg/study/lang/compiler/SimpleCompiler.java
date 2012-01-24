@@ -2,7 +2,21 @@ package kg.study.lang.compiler;
 
 import static kg.study.vm.VMInstruction.*;
 
-import kg.study.lang.Node;
+import kg.study.lang.ast.AddNode;
+import kg.study.lang.ast.ConstNode;
+import kg.study.lang.ast.DoNode;
+import kg.study.lang.ast.ExprNode;
+import kg.study.lang.ast.IfElseNode;
+import kg.study.lang.ast.IfNode;
+import kg.study.lang.ast.LTNode;
+import kg.study.lang.ast.Node;
+import kg.study.lang.ast.PrintNode;
+import kg.study.lang.ast.ProgramNode;
+import kg.study.lang.ast.SeqNode;
+import kg.study.lang.ast.SetNode;
+import kg.study.lang.ast.SubNode;
+import kg.study.lang.ast.VarNode;
+import kg.study.lang.ast.WhileNode;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -21,91 +35,90 @@ public class SimpleCompiler implements Compiler {
         switch (node.getType()) {
             case VAR:
                 gen(IFETCH);
-                gen(node.getValue());
+                gen(((VarNode) node).getName());
                 break;
             case CONST:
                 gen(IPUSH);
-                gen(node.getValue());
+                gen(((ConstNode) node).getValue());
                 break;
             case ADD:
-                compile(node.getChildren().get(0));
-                compile(node.getChildren().get(1));
+                compile(((AddNode) node).getLeft());
+                compile(((AddNode) node).getRight());
                 gen(IADD);
                 break;
             case SUB:
-                compile(node.getChildren().get(0));
-                compile(node.getChildren().get(1));
+                compile(((SubNode) node).getLeft());
+                compile(((SubNode) node).getRight());
                 gen(ISUB);
                 break;
             case LT:
-                compile(node.getChildren().get(0));
-                compile(node.getChildren().get(1));
+                compile(((LTNode) node).getLeft());
+                compile(((LTNode) node).getRight());
                 gen(ILT);
                 break;
             case SET:
-                compile(node.getChildren().get(1));
+                compile(((SetNode) node).getValue());
                 gen(ISTORE);
-                gen(node.getChildren().get(0).getValue());
+                gen(((SetNode) node).getVariable().getName());
                 break;
             case IF:
-                compile(node.getChildren().get(0));
+                compile(((IfNode) node).getCondition());
                 gen(JZ);
                 int addr = pc;
                 gen(0);
-                compile(node.getChildren().get(1));
+                compile(((IfNode) node).getBody());
                 program.set(addr, pc);
                 break;
             case IFELSE:
-                compile(node.getChildren().get(0));
+                compile(((IfElseNode) node).getCondition());
                 gen(JZ);
                 int addr1 = pc;
                 gen(0);
-                compile(node.getChildren().get(1));
+                compile(((IfElseNode) node).getBody());
                 gen(JMP);
                 int addr2 = pc;
                 gen(0);
                 program.set(addr1, pc);
-                compile(node.getChildren().get(2));
+                compile(((IfElseNode) node).getElseBody());
                 program.set(addr2, pc);
                 break;
             case WHILE:
                 addr1 = pc;
-                compile(node.getChildren().get(0));
+                compile(((WhileNode) node).getCondition());
                 gen(JZ);
                 addr2 = pc;
                 gen(0);
-                compile(node.getChildren().get(1));
+                compile(((WhileNode) node).getBody());
                 gen(JMP);
                 gen(addr1);
                 program.set(addr2, pc);
                 break;
             case DO:
                 addr = pc;
-                compile(node.getChildren().get(0));
-                compile(node.getChildren().get(1));
+                compile(((DoNode) node).getBody());
+                compile(((DoNode) node).getCondition());
                 gen(JNZ);
                 gen(addr);
                 break;
             case SEQ:
-                for (Node child : node.getChildren()) {
+                for (Node child : ((SeqNode) node).getChildren()) {
                     compile(child);
                 }
                 break;
             case EXPR:
-                compile(node.getChildren().get(0));
+                compile(((ExprNode) node).getChild());
                 /// i think this useless
                 gen(IPOP);
                 break;
             case PROGRAM:
-                compile(node.getChildren().get(0));
+                compile(((ProgramNode) node).getSeqNode());
                 gen(HALT);
                 break;
             case EMPTY:
                 // nothing to do
                 break;
             case PRINT:
-                gen(IFETCH);
-                gen(node.getChildren().get(0).getValue());
+                compile(((PrintNode) node).getVariable());
                 gen(PRINT);
                 gen(IPOP);
                 break;

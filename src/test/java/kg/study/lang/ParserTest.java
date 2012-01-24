@@ -2,10 +2,24 @@ package kg.study.lang;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.testng.Assert.assertEquals;
 
+import kg.study.lang.ast.ConstNode;
+import kg.study.lang.ast.ExprNode;
+import kg.study.lang.ast.IfNode;
+import kg.study.lang.ast.LTNode;
+import kg.study.lang.ast.Node;
+import kg.study.lang.ast.PrintNode;
+import kg.study.lang.ast.ProgramNode;
+import kg.study.lang.ast.SeqNode;
+import kg.study.lang.ast.SetNode;
+import kg.study.lang.ast.VarNode;
 import kg.study.lang.lexer.Lexer;
 import org.testng.annotations.Test;
+
+import java.util.Iterator;
 
 public class ParserTest {
 
@@ -21,65 +35,59 @@ public class ParserTest {
         // then
         System.out.println(result);
         assertEquals(result.getType(), NodeType.PROGRAM);
-        assertThat(result.getChildren(), hasSize(1));
-        Node seqNode = result.getChildren().get(0);
+        assertThat(((ProgramNode) result).getSeqNode(), is(notNullValue()));
+        SeqNode seqNode = ((ProgramNode) result).getSeqNode();
         assertSeqNode(seqNode, 4);
         //  assert inner seq node
-        Node exprNode = seqNode.getChildren().get(0);
+        Iterator<Node> seqIterator = seqNode.getChildren().iterator();
+        ExprNode exprNode = (ExprNode) seqIterator.next();
         assertExprNode(exprNode, A_CODE, 3);
         //  assert if node
-        Node ifNode = seqNode.getChildren().get(1);
+        IfNode ifNode = (IfNode) seqIterator.next();
         assertEquals(ifNode.getType(), NodeType.IF);
-        assertThat(ifNode.getChildren(), hasSize(2));
         //   assert lt node
-        Node ltNode = ifNode.getChildren().get(0);
+        LTNode ltNode = (LTNode) ifNode.getCondition();
         assertEquals(ltNode.getType(), NodeType.LT);
-        assertThat(ltNode.getChildren(), hasSize(2));
-        assertVarNode(ltNode.getChildren().get(0), A_CODE);
-        assertConstNode(ltNode.getChildren().get(1), 0);
+        assertVarNode((VarNode) ltNode.getLeft(), A_CODE);
+        assertConstNode((ConstNode) ltNode.getRight(), 0);
         //   assert expr node
-        exprNode = ifNode.getChildren().get(1);
+        exprNode = (ExprNode) ifNode.getBody();
         assertExprNode(exprNode, A_CODE, 5);
-        Node printNode = seqNode.getChildren().get(2);
+        PrintNode printNode = (PrintNode) seqIterator.next();
         assertPrintNode(printNode, A_CODE);
-        assertEmptyNode(seqNode.getChildren().get(3));
+        assertEmptyNode(seqIterator.next());
     }
 
-    private static void assertPrintNode(Node printNode, int code) {
+    private static void assertPrintNode(PrintNode printNode, int code) {
         assertEquals(printNode.getType(), NodeType.PRINT);
-        assertThat(printNode.getChildren(), hasSize(1));
-        assertVarNode(printNode.getChildren().get(0), code);
+        assertVarNode(printNode.getVariable(), code);
     }
 
     private static void assertEmptyNode(Node emptyNode) {
         assertEquals(emptyNode.getType(), NodeType.EMPTY);
-        assertThat(emptyNode.getChildren(), hasSize(0));
     }
 
-    private static void assertExprNode(Node exprNode, int code, int value) {
+    private static void assertExprNode(ExprNode exprNode, int code, int value) {
         assertEquals(exprNode.getType(), NodeType.EXPR);
-        assertThat(exprNode.getChildren(), hasSize(1));
-        Node setNode = exprNode.getChildren().get(0);
+        assertThat(exprNode.getChild(), is(notNullValue()));
+        SetNode setNode = (SetNode) exprNode.getChild();
         assertEquals(setNode.getType(), NodeType.SET);
-        assertThat(setNode.getChildren(), hasSize(2));
-        assertVarNode(setNode.getChildren().get(0), code);
-        assertConstNode(setNode.getChildren().get(1), value);
+        assertVarNode(setNode.getVariable(), code);
+        assertConstNode((ConstNode) setNode.getValue(), value);
     }
 
-    private static void assertSeqNode(Node seqNode, int size) {
+    private static void assertSeqNode(SeqNode seqNode, int size) {
         assertEquals(seqNode.getType(), NodeType.SEQ);
         assertThat(seqNode.getChildren(), hasSize(size));
     }
 
-    private static void assertConstNode(Node constNode, int value) {
+    private static void assertConstNode(ConstNode constNode, int value) {
         assertEquals(constNode.getType(), NodeType.CONST);
         assertEquals(constNode.getValue(), value);
-        assertThat(constNode.getChildren(), hasSize(0));
     }
 
-    private static void assertVarNode(Node varNode, int code) {
+    private static void assertVarNode(VarNode varNode, int code) {
         assertEquals(varNode.getType(), NodeType.VAR);
-        assertEquals(varNode.getValue(), code);
-        assertThat(varNode.getChildren(), hasSize(0));
+        assertEquals(varNode.getName(), code);
     }
 }

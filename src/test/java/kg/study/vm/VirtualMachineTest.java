@@ -2,8 +2,8 @@ package kg.study.vm;
 
 import static org.testng.Assert.assertEquals;
 
-import kg.study.lang.Node;
 import kg.study.lang.Parser;
+import kg.study.lang.ast.Node;
 import kg.study.lang.compiler.SimpleCompiler;
 import kg.study.lang.lexer.Lexer;
 import org.testng.annotations.Test;

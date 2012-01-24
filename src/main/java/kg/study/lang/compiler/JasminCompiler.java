@@ -1,6 +1,6 @@
 package kg.study.lang.compiler;
 
-import kg.study.lang.Node;
+import kg.study.lang.ast.Node;
 
 public class JasminCompiler implements Compiler {
 
@@ -15,7 +15,7 @@ public class JasminCompiler implements Compiler {
         startMainMethod();
         NodeCompiler nodeCompiler = new NodeCompiler();
         nodeCompiler.compileNode(node);
-        limits(node.count(), nodeCompiler.getLocalsCount());
+        limits(10/* TODO fix this */, nodeCompiler.getLocalsCount());
         program.append(nodeCompiler.getResult());
         returnVoid();
         endMethod();

@@ -4,8 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.testng.Assert.assertEquals;
 
-import kg.study.lang.Node;
 import kg.study.lang.Parser;
+import kg.study.lang.ast.Node;
 import kg.study.lang.lexer.Lexer;
 import kg.study.vm.VMInstruction;
 import org.testng.annotations.Test;

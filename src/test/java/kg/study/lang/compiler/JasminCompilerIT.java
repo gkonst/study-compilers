@@ -1,12 +1,12 @@
 package kg.study.lang.compiler;
 
+import static kg.study.lang.ast.NodeFactory.program;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import jasmin.Main;
-import kg.study.lang.Node;
-import kg.study.lang.NodeType;
+import kg.study.lang.ast.Node;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -38,7 +38,7 @@ public class JasminCompilerIT {
     public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {
         // given
         JasminCompiler compiler = new JasminCompiler();
-        Node node = new Node(NodeType.PROGRAM);
+        Node node = program(null);
         compiler.compile(node);
         URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{TEST_DIR.toURI().toURL()});
         File classFile = new File(TEST_DIR, CLASS_FILE_NAME);

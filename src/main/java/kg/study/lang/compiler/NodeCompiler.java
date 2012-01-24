@@ -1,6 +1,12 @@
 package kg.study.lang.compiler;
 
-import kg.study.lang.Node;
+import kg.study.lang.ast.ConstNode;
+import kg.study.lang.ast.Node;
+import kg.study.lang.ast.PrintNode;
+import kg.study.lang.ast.ProgramNode;
+import kg.study.lang.ast.SeqNode;
+import kg.study.lang.ast.SetNode;
+import kg.study.lang.ast.VarNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,24 +21,24 @@ public class NodeCompiler {
     public void compileNode(Node node) {
         switch (node.getType()) {
             case PROGRAM:
-                if (!node.getChildren().isEmpty()) {
-                    compileNode(node.getChildren().get(0));
+                if (((ProgramNode) node).getSeqNode() != null) {
+                    compileNode(((ProgramNode) node).getSeqNode());
                 }
                 break;
             case SEQ:
-                for (Node child : node.getChildren()) {
+                for (Node child : ((SeqNode) node).getChildren()) {
                     compileNode(child);
                 }
                 break;
             case SET: {
-                compileNode(node.getChildren().get(1));
+                compileNode(((SetNode) node).getValue());
                 int localIndex;
-                Object varCode = node.getChildren().get(0).getValue();
+                int varCode = ((SetNode) node).getVariable().getName();
                 if (locals.containsKey(varCode)) {
                     localIndex = locals.get(varCode);
                 } else {
                     localIndex = locals.size();
-                    locals.put((Integer) varCode, localIndex);
+                    locals.put(varCode, localIndex);
                     localsCount++;
                 }
                 result.append("\tistore ");
@@ -42,17 +48,17 @@ public class NodeCompiler {
             }
             case CONST:
                 result.append("\tbipush ");
-                result.append(node.getValue());
+                result.append(((ConstNode) node).getValue());
                 result.append("\n");
                 break;
             case PRINT:
                 result.append("\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n");
                 localsCount++;
-                compileNode(node.getChildren().get(0));
+                compileNode(((PrintNode) node).getVariable());
                 result.append("\tinvokevirtual java/io/PrintStream/println(I)V\n");
                 break;
             case VAR: {
-                int localIndex = locals.get(node.getValue());
+                int localIndex = locals.get(((VarNode) node).getName());
                 result.append("\tiload ");
                 result.append(localIndex);
                 result.append("\n");
