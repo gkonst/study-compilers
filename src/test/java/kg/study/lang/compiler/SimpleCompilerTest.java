@@ -7,7 +7,7 @@ import static org.testng.Assert.assertEquals;
 import kg.study.lang.Parser;
 import kg.study.lang.ast.Node;
 import kg.study.lang.lexer.Lexer;
-import kg.study.vm.VMInstruction;
+import kg.study.vm.OperationCode;
 import org.testng.annotations.Test;
 
 import java.util.Iterator;
@@ -29,28 +29,28 @@ public class SimpleCompilerTest {
         System.out.println(result);
         assertThat(result, hasSize(22));
         Iterator it = result.iterator();
-        assertNextValue(it, VMInstruction.IPUSH);
+        assertNextValue(it, OperationCode.IPUSH);
         assertNextValue(it, 3);
-        assertNextValue(it, VMInstruction.ISTORE);
+        assertNextValue(it, OperationCode.ISTORE);
         assertNextValue(it, 0);
-        assertNextValue(it, VMInstruction.IPOP);
-        assertNextValue(it, VMInstruction.IFETCH);
+        assertNextValue(it, OperationCode.IPOP);
+        assertNextValue(it, OperationCode.IFETCH);
         assertNextValue(it, 0);
-        assertNextValue(it, VMInstruction.IPUSH);
+        assertNextValue(it, OperationCode.IPUSH);
         assertNextValue(it, 0);
-        assertNextValue(it, VMInstruction.ILT);
-        assertNextValue(it, VMInstruction.JZ);
+        assertNextValue(it, OperationCode.ILT);
+        assertNextValue(it, OperationCode.JZ);
         assertNextValue(it, 17);
-        assertNextValue(it, VMInstruction.IPUSH);
+        assertNextValue(it, OperationCode.IPUSH);
         assertNextValue(it, 5);
-        assertNextValue(it, VMInstruction.ISTORE);
+        assertNextValue(it, OperationCode.ISTORE);
         assertNextValue(it, 0);
-        assertNextValue(it, VMInstruction.IPOP);
-        assertNextValue(it, VMInstruction.IFETCH);
+        assertNextValue(it, OperationCode.IPOP);
+        assertNextValue(it, OperationCode.IFETCH);
         assertNextValue(it, 0);
-        assertNextValue(it, VMInstruction.PRINT);
-        assertNextValue(it, VMInstruction.IPOP);
-        assertNextValue(it, VMInstruction.HALT);
+        assertNextValue(it, OperationCode.PRINT);
+        assertNextValue(it, OperationCode.IPOP);
+        assertNextValue(it, OperationCode.HALT);
     }
 
     private static void assertNextValue(Iterator iterator, Object value) {

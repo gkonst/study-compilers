@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 public class VirtualMachineTest {
+
     @Test
     public void testRun() throws Exception {
         // given
@@ -19,10 +20,10 @@ public class VirtualMachineTest {
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         compiler.compile(nodes);
-        List program = compiler.getProgram();
+        List<Instruction> program = compiler.getProgram();
         VirtualMachine vm = new VirtualMachine();
         // when
-        vm.run(program.toArray());
+        vm.run(program.toArray(new Instruction[program.size()]));
         // then
         int aCode = VirtualMachine.nameToIndex('a');
         assertEquals(vm.getVar()[aCode], 3);
@@ -36,10 +37,10 @@ public class VirtualMachineTest {
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         compiler.compile(nodes);
-        List program = compiler.getProgram();
+        List<Instruction> program = compiler.getProgram();
         VirtualMachine vm = new VirtualMachine();
         // when
-        vm.run(program.toArray());
+        vm.run(program.toArray(new Instruction[program.size()]));
         // then
         int aCode = VirtualMachine.nameToIndex('a');
         assertEquals(vm.getVar()[aCode], 5);
