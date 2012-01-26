@@ -29,7 +29,7 @@ public class ParserTest {
     public void parseShouldNotFail() throws Exception {
         // given
         String given = " { a = 3; if (a < 0) a = 5; print(a);}";
-        Parser parser = new Parser(new Lexer(given));
+        Parser parser = new Parser(Lexer.forString(given));
         // when
         Node result = parser.parse();
         // then

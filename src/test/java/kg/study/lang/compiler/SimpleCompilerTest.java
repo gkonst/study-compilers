@@ -19,7 +19,7 @@ public class SimpleCompilerTest {
     public void compileShouldNotFail() throws Exception {
         // given
         String given = " { a = 3; if (a < 0) a = 5; print(a); }";
-        Parser parser = new Parser(new Lexer(given));
+        Parser parser = new Parser(Lexer.forString(given));
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         // when

@@ -20,7 +20,7 @@ public class LexerTest {
     public void nextShouldReturnValueExpression() {
         // given
         String given = "5988 4 20";
-        Lexer lexer = new Lexer(given);
+        Lexer lexer = Lexer.forString(given);
         // when
         Token result1 = lexer.next();
         Token result2 = lexer.next();
@@ -40,7 +40,7 @@ public class LexerTest {
     public void nextShouldReturnExpression() throws Exception {
         // given
         final String given = " { a = 3; if (a < 0) a = 5; }";
-        final Lexer lexer = new Lexer(given);
+        final Lexer lexer = Lexer.forString(given);
         final List<Token> result = new LinkedList<>();
         Token expression;
         // when
