@@ -7,6 +7,7 @@ import static org.testng.Assert.assertEquals;
 import kg.study.lang.Parser;
 import kg.study.lang.ast.Node;
 import kg.study.lang.lexer.Lexer;
+import kg.study.vm.Instruction;
 import kg.study.vm.OperationCode;
 import org.testng.annotations.Test;
 
@@ -25,35 +26,34 @@ public class SimpleCompilerTest {
         // when
         compiler.compile(nodes);
         // then
-        List<?> result = compiler.getProgram();
+        List<Instruction> result = compiler.getProgram();
         System.out.println(result);
-        assertThat(result, hasSize(22));
-        Iterator it = result.iterator();
-        assertNextValue(it, OperationCode.IPUSH);
-        assertNextValue(it, 3);
-        assertNextValue(it, OperationCode.ISTORE);
-        assertNextValue(it, 0);
-        assertNextValue(it, OperationCode.IPOP);
-        assertNextValue(it, OperationCode.IFETCH);
-        assertNextValue(it, 0);
-        assertNextValue(it, OperationCode.IPUSH);
-        assertNextValue(it, 0);
-        assertNextValue(it, OperationCode.ILT);
-        assertNextValue(it, OperationCode.JZ);
-        assertNextValue(it, 17);
-        assertNextValue(it, OperationCode.IPUSH);
-        assertNextValue(it, 5);
-        assertNextValue(it, OperationCode.ISTORE);
-        assertNextValue(it, 0);
-        assertNextValue(it, OperationCode.IPOP);
-        assertNextValue(it, OperationCode.IFETCH);
-        assertNextValue(it, 0);
-        assertNextValue(it, OperationCode.PRINT);
-        assertNextValue(it, OperationCode.IPOP);
-        assertNextValue(it, OperationCode.HALT);
+        assertThat(result, hasSize(14));
+        Iterator<Instruction> it = result.iterator();
+        assertNextInstruction(it, OperationCode.IPUSH, 3);
+        assertNextInstruction(it, OperationCode.ISTORE, 0);
+        assertNextInstruction(it, OperationCode.IPOP);
+        assertNextInstruction(it, OperationCode.IFETCH, 0);
+        assertNextInstruction(it, OperationCode.IPUSH, 0);
+        assertNextInstruction(it, OperationCode.ILT);
+        assertNextInstruction(it, OperationCode.JZ, 10);
+        assertNextInstruction(it, OperationCode.IPUSH, 5);
+        assertNextInstruction(it, OperationCode.ISTORE, 0);
+        assertNextInstruction(it, OperationCode.IPOP);
+        assertNextInstruction(it, OperationCode.IFETCH, 0);
+        assertNextInstruction(it, OperationCode.PRINT);
+        assertNextInstruction(it, OperationCode.IPOP);
+        assertNextInstruction(it, OperationCode.HALT);
     }
 
-    private static void assertNextValue(Iterator iterator, Object value) {
-        assertEquals(iterator.next(), value);
+    private static void assertNextInstruction(Iterator<Instruction> iterator, OperationCode opCode, int operand) {
+        Instruction instruction = iterator.next();
+        assertEquals(instruction.getOpCode(), opCode);
+        assertEquals(instruction.getOperand(), operand);
+    }
+
+    private static void assertNextInstruction(Iterator<Instruction> iterator, OperationCode opCode) {
+        Instruction instruction = iterator.next();
+        assertEquals(instruction.getOpCode(), opCode);
     }
 }
