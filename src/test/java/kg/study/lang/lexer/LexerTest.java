@@ -14,8 +14,6 @@ import java.util.List;
 
 public class LexerTest {
 
-    public static final int A_CODE = 0;
-
     @Test
     public void nextShouldReturnValueExpression() {
         // given
@@ -50,27 +48,27 @@ public class LexerTest {
         // then
         assertThat(result, hasSize(16));
         assertEquals(result.get(0), Symbol.LBRA);
-        assertIdentifierWithValue(result, 1, A_CODE, 3);
+        assertIdentifierWithValue(result, 1, "a", 3);
         assertEquals(result.get(5), Keyword.IF);
         assertEquals(result.get(6), Symbol.LPAR);
-        assertIdentifier(result.get(7), A_CODE);
+        assertIdentifier(result.get(7), "a");
         assertEquals(result.get(8), Symbol.LESS);
         assertValueExpression(result.get(9), 0);
         assertEquals(result.get(10), Symbol.RPAR);
-        assertIdentifierWithValue(result, 11, A_CODE, 5);
+        assertIdentifierWithValue(result, 11, "a", 5);
         assertEquals(result.get(15), Symbol.RBRA);
     }
 
-    private static void assertIdentifierWithValue(List<Token> result, int startPosition, int code, int value) {
-        assertIdentifier(result.get(startPosition), code);
+    private static void assertIdentifierWithValue(List<Token> result, int startPosition, String name, int value) {
+        assertIdentifier(result.get(startPosition), name);
         assertEquals(result.get(++startPosition), Symbol.EQ);
         assertValueExpression(result.get(++startPosition), value);
         assertEquals(result.get(++startPosition), Symbol.SEMICOLON);
     }
 
-    private static void assertIdentifier(Token expression, int code) {
+    private static void assertIdentifier(Token expression, String name) {
         assertThat(expression, is(instanceOf(Identifier.class)));
-        assertEquals(((Identifier) expression).getName(), code);
+        assertEquals(((Identifier) expression).getName(), name);
     }
 
     private static void assertValueExpression(Token expression, int value) {

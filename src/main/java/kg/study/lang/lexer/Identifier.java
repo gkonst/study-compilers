@@ -1,13 +1,13 @@
 package kg.study.lang.lexer;
 
 public class Identifier implements Token {
-    private final int name;
+    private final String name;
 
-    Identifier(int name) {
+    Identifier(String name) {
         this.name = name;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 }

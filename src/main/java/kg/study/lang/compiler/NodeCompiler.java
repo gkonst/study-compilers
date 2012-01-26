@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class NodeCompiler {
 
-    // key - var code, value - index in locals
-    private Map<Integer, Integer> locals = new HashMap<>();
+    // key - var name, value - index in locals
+    private Map<String, Integer> locals = new HashMap<String, Integer>();
     private StringBuilder result = new StringBuilder();
     private int localsCount = 1; // 1 because we have one input parameter in main method
 
@@ -32,8 +32,8 @@ public class NodeCompiler {
                 break;
             case SET: {
                 compileNode(((SetNode) node).getValue());
-                int localIndex;
-                int varCode = ((SetNode) node).getVariable().getName();
+                Integer localIndex;
+                String varCode = ((SetNode) node).getVariable().getName();
                 if (locals.containsKey(varCode)) {
                     localIndex = locals.get(varCode);
                 } else {

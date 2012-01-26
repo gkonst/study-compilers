@@ -51,10 +51,8 @@ public class Lexer {
                 String word = sb.toString();
                 if (Keyword.getMapOfValues().containsKey(word)) {
                     result = Keyword.getMapOfValues().get(word);
-                } else if (word.length() == 1) {
-                    result = new Identifier(word.charAt(0) - (int) 'a');
                 } else {
-                    throw new LexerException("Unexpected word : " + word);
+                    result = new Identifier(word);
                 }
             } else {
                 throw new LexerException("Unexpected character : " + ch);

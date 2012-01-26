@@ -23,8 +23,6 @@ import java.util.Iterator;
 
 public class ParserTest {
 
-    public static final int A_CODE = 0;
-
     @Test
     public void parseShouldNotFail() throws Exception {
         // given
@@ -41,38 +39,38 @@ public class ParserTest {
         //  assert inner seq node
         Iterator<Node> seqIterator = seqNode.getChildren().iterator();
         ExprNode exprNode = (ExprNode) seqIterator.next();
-        assertExprNode(exprNode, A_CODE, 3);
+        assertExprNode(exprNode, "a", 3);
         //  assert if node
         IfNode ifNode = (IfNode) seqIterator.next();
         assertEquals(ifNode.getType(), NodeType.IF);
         //   assert lt node
         LTNode ltNode = (LTNode) ifNode.getCondition();
         assertEquals(ltNode.getType(), NodeType.LT);
-        assertVarNode((VarNode) ltNode.getLeft(), A_CODE);
+        assertVarNode((VarNode) ltNode.getLeft(), "a");
         assertConstNode((ConstNode) ltNode.getRight(), 0);
         //   assert expr node
         exprNode = (ExprNode) ifNode.getBody();
-        assertExprNode(exprNode, A_CODE, 5);
+        assertExprNode(exprNode, "a", 5);
         PrintNode printNode = (PrintNode) seqIterator.next();
-        assertPrintNode(printNode, A_CODE);
+        assertPrintNode(printNode, "a");
         assertEmptyNode(seqIterator.next());
     }
 
-    private static void assertPrintNode(PrintNode printNode, int code) {
+    private static void assertPrintNode(PrintNode printNode, String name) {
         assertEquals(printNode.getType(), NodeType.PRINT);
-        assertVarNode(printNode.getVariable(), code);
+        assertVarNode(printNode.getVariable(), name);
     }
 
     private static void assertEmptyNode(Node emptyNode) {
         assertEquals(emptyNode.getType(), NodeType.EMPTY);
     }
 
-    private static void assertExprNode(ExprNode exprNode, int code, int value) {
+    private static void assertExprNode(ExprNode exprNode, String name, int value) {
         assertEquals(exprNode.getType(), NodeType.EXPR);
         assertThat(exprNode.getChild(), is(notNullValue()));
         SetNode setNode = (SetNode) exprNode.getChild();
         assertEquals(setNode.getType(), NodeType.SET);
-        assertVarNode(setNode.getVariable(), code);
+        assertVarNode(setNode.getVariable(), name);
         assertConstNode((ConstNode) setNode.getValue(), value);
     }
 
@@ -86,8 +84,8 @@ public class ParserTest {
         assertEquals(constNode.getValue(), value);
     }
 
-    private static void assertVarNode(VarNode varNode, int code) {
+    private static void assertVarNode(VarNode varNode, String name) {
         assertEquals(varNode.getType(), NodeType.VAR);
-        assertEquals(varNode.getName(), code);
+        assertEquals(varNode.getName(), name);
     }
 }

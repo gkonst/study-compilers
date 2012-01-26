@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 public class JasminCompilerTest {
 
     public static final Node SET_AND_PRINT_NODE = program(
-            seq(set(var(0), constant(3)), print(var(0))));
+            seq(set(var("a"), constant(3)), print(var("a"))));
 
     @Test
     public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {

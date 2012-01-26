@@ -21,12 +21,15 @@ import kg.study.vm.Instruction;
 import kg.study.vm.OperationCode;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SimpleCompiler implements Compiler {
     private final List<Instruction> program = new LinkedList<>();
     private int pc = 0;
+    private Map<String, Integer> locals = new HashMap<String, Integer>();
 
     private void addInstruction(OperationCode opCode, int operand) {
         program.add(new Instruction(opCode, operand));
@@ -42,10 +45,21 @@ public class SimpleCompiler implements Compiler {
         program.get(index).setOperand(operand);
     }
 
+    private int getLocalIndex(String name) {
+        int result;
+        if (locals.containsKey(name)) {
+            result = locals.get(name);
+        } else {
+            result = locals.size();
+            locals.put(name, result);
+        }
+        return result;
+    }
+
     public void compile(Node node) {
         switch (node.getType()) {
             case VAR:
-                addInstruction(IFETCH, ((VarNode) node).getName());
+                addInstruction(IFETCH, getLocalIndex(((VarNode) node).getName()));
                 break;
             case CONST:
                 addInstruction(IPUSH, ((ConstNode) node).getValue());
@@ -67,7 +81,7 @@ public class SimpleCompiler implements Compiler {
                 break;
             case SET:
                 compile(((SetNode) node).getValue());
-                addInstruction(ISTORE, ((SetNode) node).getVariable().getName());
+                addInstruction(ISTORE, getLocalIndex(((SetNode) node).getVariable().getName()));
                 break;
             case IF: {
                 compile(((IfNode) node).getCondition());

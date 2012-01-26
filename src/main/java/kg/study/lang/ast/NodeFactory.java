@@ -1,7 +1,7 @@
 package kg.study.lang.ast;
 
 public class NodeFactory {
-    public static VarNode var(int name) {
+    public static VarNode var(String name) {
         return new VarNode(name);
     }
 
