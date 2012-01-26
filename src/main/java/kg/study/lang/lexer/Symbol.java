@@ -3,7 +3,7 @@ package kg.study.lang.lexer;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Symbol implements Expression {
+public enum Symbol implements Token {
     LBRA('{'),
     RBRA('}'),
     EQ('='),

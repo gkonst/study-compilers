@@ -6,18 +6,18 @@ import kg.study.lang.ast.BinaryOperation;
 import kg.study.lang.ast.Node;
 import kg.study.lang.ast.SeqNode;
 import kg.study.lang.ast.VarNode;
-import kg.study.lang.lexer.Expression;
 import kg.study.lang.lexer.Identifier;
 import kg.study.lang.lexer.Keyword;
 import kg.study.lang.lexer.Lexer;
 import kg.study.lang.lexer.Symbol;
-import kg.study.lang.lexer.ValueExpression;
+import kg.study.lang.lexer.Token;
+import kg.study.lang.lexer.ValueToken;
 
 
 public class Parser {
 
     private final Lexer lexer;
-    private Expression currentExpression;
+    private Token currentExpression;
 
     public Parser(Lexer lexer) {
         this.lexer = lexer;
@@ -28,8 +28,8 @@ public class Parser {
         if (currentExpression instanceof Identifier) {
             node = var(((Identifier) currentExpression).getName());
             nextExpression();
-        } else if (currentExpression instanceof ValueExpression) {
-            node = constant((Integer) ((ValueExpression) currentExpression).getValue());
+        } else if (currentExpression instanceof ValueToken) {
+            node = constant((Integer) ((ValueToken) currentExpression).getValue());
             nextExpression();
         } else {
             node = paren();
@@ -142,7 +142,7 @@ public class Parser {
     public Node parse() {
         nextExpression();
         Node node = program((SeqNode) statement());
-        if (currentExpression != Expression.EOF) {
+        if (currentExpression != Token.EOF) {
             throw new IllegalArgumentException("Invalid statement syntax");
         }
         return node;

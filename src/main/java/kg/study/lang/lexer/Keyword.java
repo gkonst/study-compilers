@@ -3,7 +3,7 @@ package kg.study.lang.lexer;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Keyword implements Expression {
+public enum Keyword implements Token {
     IF("if"),
     ELSE("else"),
     DO("do"),

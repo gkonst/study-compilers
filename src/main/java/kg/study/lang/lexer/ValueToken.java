@@ -1,9 +1,9 @@
 package kg.study.lang.lexer;
 
-public class ValueExpression implements Expression {
+public class ValueToken implements Token {
     private final Object value;
 
-    ValueExpression(Object value) {
+    ValueToken(Object value) {
         this.value = value;
     }
 

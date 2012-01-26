@@ -9,11 +9,11 @@ public class Lexer {
         this.source = source;
     }
 
-    public Expression next() {
-        Expression result = null;
+    public Token next() {
+        Token result = null;
         while (result == null) {
             if (position == source.length()) {
-                result = Expression.EOF;
+                result = Token.EOF;
             } else if (Character.isSpaceChar(currChar())) {
                 position++;
             } else if (Symbol.getMapOfValues().containsKey(currChar())) {
@@ -25,7 +25,7 @@ public class Lexer {
                     value = value * 10 + Character.digit(currChar(), 10);
                     position++;
                 }
-                return new ValueExpression(value);
+                return new ValueToken(value);
             } else if (Character.isLetter(currChar())) {
                 StringBuilder sb = new StringBuilder();
                 while (position < source.length() && Character.isLetter(currChar())) {

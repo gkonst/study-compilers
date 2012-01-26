@@ -22,18 +22,18 @@ public class LexerTest {
         String given = "5988 4 20";
         Lexer lexer = new Lexer(given);
         // when
-        Expression result1 = lexer.next();
-        Expression result2 = lexer.next();
-        Expression result3 = lexer.next();
-        Expression result4 = lexer.next();
+        Token result1 = lexer.next();
+        Token result2 = lexer.next();
+        Token result3 = lexer.next();
+        Token result4 = lexer.next();
         // then
-        assertTrue(result1 instanceof ValueExpression);
-        assertEquals(((ValueExpression) result1).getValue(), 5988);
-        assertTrue(result2 instanceof ValueExpression);
-        assertEquals(((ValueExpression) result2).getValue(), 4);
-        assertTrue(result3 instanceof ValueExpression);
-        assertEquals(((ValueExpression) result3).getValue(), 20);
-        assertEquals(result4, Expression.EOF);
+        assertTrue(result1 instanceof ValueToken);
+        assertEquals(((ValueToken) result1).getValue(), 5988);
+        assertTrue(result2 instanceof ValueToken);
+        assertEquals(((ValueToken) result2).getValue(), 4);
+        assertTrue(result3 instanceof ValueToken);
+        assertEquals(((ValueToken) result3).getValue(), 20);
+        assertEquals(result4, Token.EOF);
     }
 
     @Test
@@ -41,10 +41,10 @@ public class LexerTest {
         // given
         final String given = " { a = 3; if (a < 0) a = 5; }";
         final Lexer lexer = new Lexer(given);
-        final List<Expression> result = new LinkedList<>();
-        Expression expression;
+        final List<Token> result = new LinkedList<>();
+        Token expression;
         // when
-        while ((expression = lexer.next()) != Expression.EOF) {
+        while ((expression = lexer.next()) != Token.EOF) {
             result.add(expression);
         }
         // then
@@ -61,20 +61,20 @@ public class LexerTest {
         assertEquals(result.get(15), Symbol.RBRA);
     }
 
-    private static void assertIdentifierWithValue(List<Expression> result, int startPosition, int code, int value) {
+    private static void assertIdentifierWithValue(List<Token> result, int startPosition, int code, int value) {
         assertIdentifier(result.get(startPosition), code);
         assertEquals(result.get(++startPosition), Symbol.EQ);
         assertValueExpression(result.get(++startPosition), value);
         assertEquals(result.get(++startPosition), Symbol.SEMICOLON);
     }
 
-    private static void assertIdentifier(Expression expression, int code) {
+    private static void assertIdentifier(Token expression, int code) {
         assertThat(expression, is(instanceOf(Identifier.class)));
         assertEquals(((Identifier) expression).getName(), code);
     }
 
-    private static void assertValueExpression(Expression expression, int value) {
-        assertThat(expression, is(instanceOf(ValueExpression.class)));
-        assertEquals(((ValueExpression) expression).getValue(), value);
+    private static void assertValueExpression(Token expression, int value) {
+        assertThat(expression, is(instanceOf(ValueToken.class)));
+        assertEquals(((ValueToken) expression).getValue(), value);
     }
 }
