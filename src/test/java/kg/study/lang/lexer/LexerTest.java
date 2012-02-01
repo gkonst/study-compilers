@@ -17,7 +17,7 @@ public class LexerTest {
     @Test
     public void nextShouldReturnValueToken() {
         // given
-        String given = "5988 4 20 3.1415";
+        String given = "5988 4 20 3.1415 \"foo\"";
         Lexer lexer = Lexer.forString(given);
         // when
         Token result1 = lexer.next();
@@ -25,12 +25,14 @@ public class LexerTest {
         Token result3 = lexer.next();
         Token result4 = lexer.next();
         Token result5 = lexer.next();
+        Token result6 = lexer.next();
         // then
         assertValueEquals(result1, 5988);
         assertValueEquals(result2, 4);
         assertValueEquals(result3, 20);
         assertValueEquals(result4, 3.1415f);
-        assertEquals(result5, Token.EOF);
+        assertValueEquals(result5, "foo");
+        assertEquals(result6, Token.EOF);
     }
 
     private void assertValueEquals(Token value, Object equalsTo) {

@@ -36,24 +36,9 @@ public class Lexer {
                 result = Symbol.getMapOfValues().get(ch);
                 readNextChar();
             } else if (Character.isDigit(ch)) {
-                Number value;
-                StringBuilder sb = new StringBuilder();
-                while (Character.isDigit(ch)) {
-                    sb.append((char) ch);
-                    readNextChar();
-                }
-                if (ch == '.') {
-                    sb.append((char) ch);
-                    readNextChar();
-                    while (Character.isDigit(ch)) {
-                        sb.append((char) ch);
-                        readNextChar();
-                    }
-                    value = Float.valueOf(sb.toString());
-                } else {
-                    value = Integer.valueOf(sb.toString());
-                }
-                return new Value(value);
+                result = numberValue();
+            } else if (ch == '"') {
+                result = stringValue();
             } else if (Character.isLetter(ch)) {
                 StringBuilder sb = new StringBuilder();
                 while (Character.isLetter(ch)) {
@@ -71,6 +56,40 @@ public class Lexer {
             }
         }
         return result;
+    }
+
+    private Token numberValue() {
+        Token result;
+        Number value;
+        StringBuilder sb = new StringBuilder();
+        while (Character.isDigit(ch)) {
+            sb.append((char) ch);
+            readNextChar();
+        }
+        if (ch == '.') {
+            sb.append((char) ch);
+            readNextChar();
+            while (Character.isDigit(ch)) {
+                sb.append((char) ch);
+                readNextChar();
+            }
+            value = Float.valueOf(sb.toString());
+        } else {
+            value = Integer.valueOf(sb.toString());
+        }
+        result = new Value(value);
+        return result;
+    }
+
+    private Token stringValue() {
+        readNextChar();
+        StringBuilder sb = new StringBuilder();
+        while (ch != '"') {
+            sb.append((char) ch);
+            readNextChar();
+        }
+        readNextChar();
+        return new Value(sb.toString());
     }
 
     private void readNextChar() {
