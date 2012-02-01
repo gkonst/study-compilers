@@ -21,13 +21,13 @@ import org.testng.annotations.Test;
 
 import java.util.Iterator;
 
-public class ParserTest {
+public class PredictiveParserTest {
 
     @Test
     public void parseShouldNotFail() throws Exception {
         // given
         String given = " { a = 3; if (a < 0) a = 5; print(a);}";
-        Parser parser = new Parser(Lexer.forString(given));
+        PredictiveParser parser = new PredictiveParser(Lexer.forString(given));
         // when
         Node result = parser.parse();
         // then

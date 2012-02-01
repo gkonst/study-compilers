@@ -14,12 +14,12 @@ import kg.study.lang.lexer.Token;
 import kg.study.lang.lexer.ValueToken;
 
 
-public class Parser {
+public class PredictiveParser {
 
     private final Lexer lexer;
     private Token currentExpression;
 
-    public Parser(Lexer lexer) {
+    public PredictiveParser(Lexer lexer) {
         this.lexer = lexer;
     }
 

@@ -2,7 +2,7 @@ package kg.study.vm;
 
 import static org.testng.Assert.assertEquals;
 
-import kg.study.lang.Parser;
+import kg.study.lang.PredictiveParser;
 import kg.study.lang.ast.Node;
 import kg.study.lang.compiler.SimpleCompiler;
 import kg.study.lang.lexer.Lexer;
@@ -16,7 +16,7 @@ public class VirtualMachineTest {
     public void testRun() throws Exception {
         // given
         String given = " { a = 3; if (a < 0) a = 5; print(a); }";
-        Parser parser = new Parser(Lexer.forString(given));
+        PredictiveParser parser = new PredictiveParser(Lexer.forString(given));
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         compiler.compile(nodes);
@@ -33,7 +33,7 @@ public class VirtualMachineTest {
     public void testRun2() throws Exception {
         // given
         String given = " { a = 3; if (a < 4) a = 5; }";
-        Parser parser = new Parser(Lexer.forString(given));
+        PredictiveParser parser = new PredictiveParser(Lexer.forString(given));
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         compiler.compile(nodes);

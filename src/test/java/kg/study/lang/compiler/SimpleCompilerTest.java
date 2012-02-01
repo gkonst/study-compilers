@@ -4,7 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.testng.Assert.assertEquals;
 
-import kg.study.lang.Parser;
+import kg.study.lang.PredictiveParser;
 import kg.study.lang.ast.Node;
 import kg.study.lang.lexer.Lexer;
 import kg.study.vm.Instruction;
@@ -20,7 +20,7 @@ public class SimpleCompilerTest {
     public void compileShouldNotFail() throws Exception {
         // given
         String given = " { a = 3; if (a < 0) a = 5; print(a); }";
-        Parser parser = new Parser(Lexer.forString(given));
+        PredictiveParser parser = new PredictiveParser(Lexer.forString(given));
         Node nodes = parser.parse();
         SimpleCompiler compiler = new SimpleCompiler();
         // when
