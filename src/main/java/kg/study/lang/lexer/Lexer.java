@@ -36,12 +36,24 @@ public class Lexer {
                 result = Symbol.getMapOfValues().get(ch);
                 readNextChar();
             } else if (Character.isDigit(ch)) {
-                int value = 0;
+                Number value;
+                StringBuilder sb = new StringBuilder();
                 while (Character.isDigit(ch)) {
-                    value = value * 10 + Character.digit(ch, 10);
+                    sb.append((char) ch);
                     readNextChar();
                 }
-                return new ValueToken(value);
+                if (ch == '.') {
+                    sb.append((char) ch);
+                    readNextChar();
+                    while (Character.isDigit(ch)) {
+                        sb.append((char) ch);
+                        readNextChar();
+                    }
+                    value = Float.valueOf(sb.toString());
+                } else {
+                    value = Integer.valueOf(sb.toString());
+                }
+                return new Value(value);
             } else if (Character.isLetter(ch)) {
                 StringBuilder sb = new StringBuilder();
                 while (Character.isLetter(ch)) {
@@ -55,7 +67,7 @@ public class Lexer {
                     result = new Identifier(word);
                 }
             } else {
-                throw new LexerException("Unexpected character : " + ch);
+                throw new LexerException("Unexpected character : " + (char) ch);
             }
         }
         return result;

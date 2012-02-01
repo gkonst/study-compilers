@@ -1,7 +1,5 @@
 package kg.study.lang;
 
-import static kg.study.lang.ast.NodeFactory.*;
-
 import kg.study.lang.ast.BinaryOperation;
 import kg.study.lang.ast.Node;
 import kg.study.lang.ast.SeqNode;
@@ -11,7 +9,23 @@ import kg.study.lang.lexer.Keyword;
 import kg.study.lang.lexer.Lexer;
 import kg.study.lang.lexer.Symbol;
 import kg.study.lang.lexer.Token;
-import kg.study.lang.lexer.ValueToken;
+import kg.study.lang.lexer.Value;
+
+import static kg.study.lang.ast.NodeFactory.add;
+import static kg.study.lang.ast.NodeFactory.constant;
+import static kg.study.lang.ast.NodeFactory.doNode;
+import static kg.study.lang.ast.NodeFactory.emptyNode;
+import static kg.study.lang.ast.NodeFactory.expr;
+import static kg.study.lang.ast.NodeFactory.ifElseNode;
+import static kg.study.lang.ast.NodeFactory.ifNode;
+import static kg.study.lang.ast.NodeFactory.lt;
+import static kg.study.lang.ast.NodeFactory.print;
+import static kg.study.lang.ast.NodeFactory.program;
+import static kg.study.lang.ast.NodeFactory.seq;
+import static kg.study.lang.ast.NodeFactory.set;
+import static kg.study.lang.ast.NodeFactory.sub;
+import static kg.study.lang.ast.NodeFactory.var;
+import static kg.study.lang.ast.NodeFactory.whileNode;
 
 
 public class PredictiveParser {
@@ -28,8 +42,8 @@ public class PredictiveParser {
         if (currentExpression instanceof Identifier) {
             node = var(((Identifier) currentExpression).getName());
             nextExpression();
-        } else if (currentExpression instanceof ValueToken) {
-            node = constant((Integer) ((ValueToken) currentExpression).getValue());
+        } else if (currentExpression instanceof Value) {
+            node = constant((Integer) ((Value) currentExpression).getValue());
             nextExpression();
         } else {
             node = paren();
