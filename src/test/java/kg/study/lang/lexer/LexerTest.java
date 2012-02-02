@@ -1,16 +1,16 @@
 package kg.study.lang.lexer;
 
-import org.testng.annotations.Test;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+
+import org.testng.annotations.Test;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class LexerTest {
 
@@ -33,6 +33,45 @@ public class LexerTest {
         assertValueEquals(result4, 3.1415f);
         assertValueEquals(result5, "foo");
         assertEquals(result6, Token.EOF);
+    }
+
+    @Test(expectedExceptions = LexerException.class)
+    public void nextShouldFailIfStringLiteralIsNotClosedAndEOF() {
+        // given
+        String given = "\"foo";
+        Lexer lexer = Lexer.forString(given);
+        // when
+        Token result = lexer.next();
+        // then
+        //  exception should be raised
+    }
+
+    @Test(expectedExceptions = LexerException.class)
+    public void nextShouldFailIfStringLiteralIsNotClosedAndNewLineExists() {
+        // given
+        String given = "\"foo\n\"bar\"";
+        Lexer lexer = Lexer.forString(given);
+        // when
+        Token result = lexer.next();
+        // then
+        //  exception should be raised
+    }
+
+    @Test
+    public void nextShouldWorkIfMultilineStringGiven() throws Exception {
+        // given
+        String given = "100\n5\n\"foo\"";
+        Lexer lexer = Lexer.forString(given);
+        // when
+        Token result1 = lexer.next();
+        Token result2 = lexer.next();
+        Token result3 = lexer.next();
+        Token result4 = lexer.next();
+        // then
+        assertValueEquals(result1, 100);
+        assertValueEquals(result2, 5);
+        assertValueEquals(result3, "foo");
+        assertEquals(result4, Token.EOF);
     }
 
     private void assertValueEquals(Token value, Object equalsTo) {

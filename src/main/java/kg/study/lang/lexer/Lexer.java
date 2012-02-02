@@ -9,6 +9,7 @@ import java.io.StringReader;
 
 public class Lexer {
 
+    public static final int EOF_CODE = -1;
     private final Reader reader;
     private int ch;
 
@@ -28,9 +29,9 @@ public class Lexer {
     public Token next() {
         Token result = null;
         while (result == null) {
-            if (ch == -1) {
+            if (ch == EOF_CODE) {
                 result = Token.EOF;
-            } else if (Character.isSpaceChar(ch)) {
+            } else if (Character.isSpaceChar(ch) || ch == '\n') {
                 readNextChar();
             } else if (Symbol.getMapOfValues().containsKey(ch)) {
                 result = Symbol.getMapOfValues().get(ch);
@@ -85,6 +86,9 @@ public class Lexer {
         readNextChar();
         StringBuilder sb = new StringBuilder();
         while (ch != '"') {
+            if (ch == '\n' || ch == EOF_CODE) {
+                throw new LexerException("Illegal line end in string literal");
+            }
             sb.append((char) ch);
             readNextChar();
         }

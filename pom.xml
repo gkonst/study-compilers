@@ -45,6 +45,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.8</version>
                 <configuration>
+                    <jvm>${jdk7.java}</jvm>
                     <encoding>UTF-8</encoding>
                 </configuration>
                 <executions>
