@@ -10,4 +10,9 @@ public class Value implements Token {
     public Object getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "Value{" + value + '}';
+    }
 }
