@@ -4,18 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringReader;
 
 public class Lexer {
 
-    public static final int EOF_CODE = -1;
-    private final Reader reader;
-    private int ch;
+    private final BufferedReader reader;
+    private int line = 0;
+    private int col = 0;
+    private String row;
 
-    public Lexer(Reader reader) {
+    private Lexer(BufferedReader reader) {
         this.reader = reader;
-        readNextChar();
+        readNextLine();
     }
 
     public static Lexer forStream(InputStream stream) {
@@ -23,37 +23,45 @@ public class Lexer {
     }
 
     public static Lexer forString(String str) {
-        return new Lexer(new StringReader(str));
+        return new Lexer(new BufferedReader(new StringReader(str)));
     }
 
     public Token next() {
         Token result = null;
         while (result == null) {
-            if (ch == EOF_CODE) {
+            if (row == null) {
                 result = Token.EOF;
-            } else if (Character.isSpaceChar(ch) || ch == '\n') {
-                readNextChar();
-            } else if (Symbol.getMapOfValues().containsKey(ch)) {
-                result = Symbol.getMapOfValues().get(ch);
-                readNextChar();
-            } else if (Character.isDigit(ch)) {
-                result = numberValue();
-            } else if (ch == '"') {
-                result = stringValue();
-            } else if (Character.isLetter(ch)) {
-                StringBuilder sb = new StringBuilder();
-                while (Character.isLetter(ch)) {
-                    sb.append((char) ch);
-                    readNextChar();
-                }
-                String word = sb.toString();
-                if (Keyword.getMapOfValues().containsKey(word)) {
-                    result = Keyword.getMapOfValues().get(word);
-                } else {
-                    result = new Identifier(word);
-                }
             } else {
-                throw new LexerException("Unexpected character : " + (char) ch);
+                if (col == row.length()) {
+                    readNextLine();
+                } else {
+                    int ch = row.charAt(col);
+                    if (Character.isSpaceChar(ch)) {
+                        col++;
+                    } else if (Symbol.getMapOfValues().containsKey(ch)) {
+                        result = Symbol.getMapOfValues().get(ch);
+                        col++;
+                    } else if (Character.isDigit(ch)) {
+                        result = numberValue();
+                    } else if (ch == '"') {
+                        result = stringValue();
+                        col++;
+                    } else if (Character.isLetter(ch)) {
+                        StringBuilder sb = new StringBuilder();
+                        while (col < row.length() && Character.isLetter(row.charAt(col))) {
+                            sb.append(row.charAt(col));
+                            col++;
+                        }
+                        String word = sb.toString();
+                        if (Keyword.getMapOfValues().containsKey(word)) {
+                            result = Keyword.getMapOfValues().get(word);
+                        } else {
+                            result = new Identifier(word);
+                        }
+                    } else {
+                        throw new LexerException("Unexpected character : " + (char) ch);
+                    }
+                }
             }
         }
         return result;
@@ -63,16 +71,16 @@ public class Lexer {
         Token result;
         Number value;
         StringBuilder sb = new StringBuilder();
-        while (Character.isDigit(ch)) {
-            sb.append((char) ch);
-            readNextChar();
+        while (col < row.length() && Character.isDigit(row.charAt(col))) {
+            sb.append(row.charAt(col));
+            col++;
         }
-        if (ch == '.') {
-            sb.append((char) ch);
-            readNextChar();
-            while (Character.isDigit(ch)) {
-                sb.append((char) ch);
-                readNextChar();
+        if (col < row.length() && row.charAt(col) == '.') {
+            sb.append(row.charAt(col));
+            col++;
+            while (col < row.length() && Character.isDigit(row.charAt(col))) {
+                sb.append(row.charAt(col));
+                col++;
             }
             value = Float.valueOf(sb.toString());
         } else {
@@ -83,24 +91,27 @@ public class Lexer {
     }
 
     private Token stringValue() {
-        readNextChar();
         StringBuilder sb = new StringBuilder();
-        while (ch != '"') {
-            if (ch == '\n' || ch == EOF_CODE) {
+        col++;
+        while (row.charAt(col) != '"') {
+            sb.append(row.charAt(col));
+            col++;
+            if (col == row.length()) {
                 throw new LexerException("Illegal line end in string literal");
             }
-            sb.append((char) ch);
-            readNextChar();
         }
-        readNextChar();
         return new Value(sb.toString());
     }
 
-    private void readNextChar() {
+    private void readNextLine() {
         try {
-            ch = reader.read();
+            row = reader.readLine();
         } catch (IOException e) {
             throw new LexerException(e);
         }
+        if (row != null) {
+            line++;
+        }
+        col = 0;
     }
 }

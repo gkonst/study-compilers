@@ -74,6 +74,21 @@ public class LexerTest {
         assertEquals(result4, Token.EOF);
     }
 
+    @Test
+    public void nextShouldWorkIfIdentifierIsInTheEnd() throws Exception {
+        // given
+        String given = "100 a";
+        Lexer lexer = Lexer.forString(given);
+        // when
+        Token result1 = lexer.next();
+        Token result2 = lexer.next();
+        Token result3 = lexer.next();
+        // then
+        assertValueEquals(result1, 100);
+        assertIdentifier(result2, "a");
+        assertEquals(result3, Token.EOF);
+    }
+
     private void assertValueEquals(Token value, Object equalsTo) {
         assertTrue(value instanceof Value);
         assertEquals(((Value) value).getValue(), equalsTo);
