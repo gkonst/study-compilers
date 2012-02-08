@@ -27,10 +27,9 @@ public class Lexer {
     }
 
     public Token next() {
-        Token result = null;
-        while (result == null) {
+        while (true) {
             if (row == null) {
-                result = Token.EOF;
+                return Token.EOF;
             } else {
                 if (col == row.length()) {
                     readNextLine();
@@ -39,32 +38,34 @@ public class Lexer {
                     if (Character.isSpaceChar(ch)) {
                         col++;
                     } else if (Symbol.getMapOfValues().containsKey(ch)) {
-                        result = Symbol.getMapOfValues().get(ch);
                         col++;
+                        return Symbol.getMapOfValues().get(ch);
                     } else if (Character.isDigit(ch)) {
-                        result = numberValue();
+                        return numberValue();
                     } else if (ch == '"') {
-                        result = stringValue();
-                        col++;
+                        return stringValue();
                     } else if (Character.isLetter(ch)) {
-                        StringBuilder sb = new StringBuilder();
-                        while (col < row.length() && Character.isLetter(row.charAt(col))) {
-                            sb.append(row.charAt(col));
-                            col++;
-                        }
-                        String word = sb.toString();
-                        if (Keyword.getMapOfValues().containsKey(word)) {
-                            result = Keyword.getMapOfValues().get(word);
-                        } else {
-                            result = new Identifier(word);
-                        }
+                        return identifierOrKeyword();
                     } else {
                         throw new LexerException("Unexpected character : " + (char) ch);
                     }
                 }
             }
         }
-        return result;
+    }
+
+    private Token identifierOrKeyword() {
+        StringBuilder sb = new StringBuilder();
+        while (col < row.length() && Character.isLetter(row.charAt(col))) {
+            sb.append(row.charAt(col));
+            col++;
+        }
+        String word = sb.toString();
+        if (Keyword.getMapOfValues().containsKey(word)) {
+            return Keyword.getMapOfValues().get(word);
+        } else {
+            return new Identifier(word);
+        }
     }
 
     private Token numberValue() {
@@ -100,6 +101,7 @@ public class Lexer {
                 throw new LexerException("Illegal line end in string literal");
             }
         }
+        col++;
         return new Value(sb.toString());
     }
 
