@@ -9,9 +9,9 @@ import java.io.StringReader;
 public class Lexer {
 
     private final BufferedReader reader;
-    private int line = 0;
+    private int row = 0;
     private int col = 0;
-    private String row;
+    private String line;
 
     private Lexer(BufferedReader reader) {
         this.reader = reader;
@@ -28,22 +28,22 @@ public class Lexer {
 
     public Token next() {
         while (true) {
-            if (row == null) {
+            if (line == null) {
                 return Token.EOF;
             }
 
-            if (col == row.length()) {
+            if (col == line.length()) {
                 readNextLine();
                 continue;
             }
 
-            int ch = currentChar();
+            char ch = currentChar();
 
             if (Character.isSpaceChar(ch)) {
                 col++;
-            } else if (Symbol.getMapOfValues().containsKey(ch)) {
+            } else if (Symbol.mapOfValues().containsKey(ch)) {
                 col++;
-                return Symbol.getMapOfValues().get(ch);
+                return Symbol.mapOfValues().get(ch);
             } else if (Character.isDigit(ch)) {
                 return numberValue();
             } else if (ch == '"') {
@@ -51,7 +51,7 @@ public class Lexer {
             } else if (Character.isLetter(ch)) {
                 return identifierOrKeyword();
             } else {
-                throw new LexerException("Unexpected character : " + (char) ch);
+                throw new LexerException("Unexpected character : " + ch, row, col);
             }
         }
     }
@@ -64,8 +64,8 @@ public class Lexer {
             ch = nextChar();
         }
         String word = sb.toString();
-        if (Keyword.getMapOfValues().containsKey(word)) {
-            return Keyword.getMapOfValues().get(word);
+        if (Keyword.mapOfValues().containsKey(word)) {
+            return Keyword.mapOfValues().get(word);
         } else {
             return new Identifier(word);
         }
@@ -101,8 +101,8 @@ public class Lexer {
         while (ch != '"') {
             sb.append(ch);
             ch = nextChar();
-            if (col == row.length()) {
-                throw new LexerException("Illegal line end in string literal");
+            if (col == line.length()) {
+                throw new LexerException("Illegal line end in string literal", row, col);
             }
         }
         col++;
@@ -115,8 +115,8 @@ public class Lexer {
     }
 
     private char currentChar() {
-        if (col < row.length()) {
-            return row.charAt(col);
+        if (col < line.length()) {
+            return line.charAt(col);
         } else {
             return '\n';
         }
@@ -124,12 +124,12 @@ public class Lexer {
 
     private void readNextLine() {
         try {
-            row = reader.readLine();
+            line = reader.readLine();
         } catch (IOException e) {
-            throw new LexerException(e);
+            throw new LexerException(e, row, col);
         }
-        if (row != null) {
-            line++;
+        if (line != null) {
+            row++;
         }
         col = 0;
     }

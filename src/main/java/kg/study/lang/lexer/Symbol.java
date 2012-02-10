@@ -15,17 +15,17 @@ public enum Symbol implements Token {
     LESS('<');
 
     private final char text;
-    private static Map<Integer, Symbol> mapOfValues;
+    private static Map<Character, Symbol> mapOfValues;
 
     private Symbol(char text) {
         this.text = text;
     }
 
-    public static Map<Integer, Symbol> getMapOfValues() {
+    public static Map<Character, Symbol> mapOfValues() {
         if (mapOfValues == null) {
             mapOfValues = new HashMap<>();
             for (Symbol symbol : values()) {
-                mapOfValues.put((int) symbol.text, symbol);
+                mapOfValues.put(symbol.text, symbol);
             }
         }
         return mapOfValues;

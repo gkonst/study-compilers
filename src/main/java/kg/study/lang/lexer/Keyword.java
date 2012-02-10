@@ -17,7 +17,7 @@ public enum Keyword implements Token {
         this.text = text;
     }
 
-    public static Map<String, Keyword> getMapOfValues() {
+    public static Map<String, Keyword> mapOfValues() {
         if (mapOfValues == null) {
             mapOfValues = new HashMap<>();
             for (Keyword symbol : values()) {
