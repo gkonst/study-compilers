@@ -30,35 +30,38 @@ public class Lexer {
         while (true) {
             if (row == null) {
                 return Token.EOF;
+            }
+
+            if (col == row.length()) {
+                readNextLine();
+                continue;
+            }
+
+            int ch = currentChar();
+
+            if (Character.isSpaceChar(ch)) {
+                col++;
+            } else if (Symbol.getMapOfValues().containsKey(ch)) {
+                col++;
+                return Symbol.getMapOfValues().get(ch);
+            } else if (Character.isDigit(ch)) {
+                return numberValue();
+            } else if (ch == '"') {
+                return stringValue();
+            } else if (Character.isLetter(ch)) {
+                return identifierOrKeyword();
             } else {
-                if (col == row.length()) {
-                    readNextLine();
-                } else {
-                    int ch = row.charAt(col);
-                    if (Character.isSpaceChar(ch)) {
-                        col++;
-                    } else if (Symbol.getMapOfValues().containsKey(ch)) {
-                        col++;
-                        return Symbol.getMapOfValues().get(ch);
-                    } else if (Character.isDigit(ch)) {
-                        return numberValue();
-                    } else if (ch == '"') {
-                        return stringValue();
-                    } else if (Character.isLetter(ch)) {
-                        return identifierOrKeyword();
-                    } else {
-                        throw new LexerException("Unexpected character : " + (char) ch);
-                    }
-                }
+                throw new LexerException("Unexpected character : " + (char) ch);
             }
         }
     }
 
     private Token identifierOrKeyword() {
         StringBuilder sb = new StringBuilder();
-        while (col < row.length() && Character.isLetter(row.charAt(col))) {
-            sb.append(row.charAt(col));
-            col++;
+        char ch = currentChar();
+        while (Character.isLetter(ch)) {
+            sb.append(ch);
+            ch = nextChar();
         }
         String word = sb.toString();
         if (Keyword.getMapOfValues().containsKey(word)) {
@@ -72,16 +75,17 @@ public class Lexer {
         Token result;
         Number value;
         StringBuilder sb = new StringBuilder();
-        while (col < row.length() && Character.isDigit(row.charAt(col))) {
-            sb.append(row.charAt(col));
-            col++;
+        char ch = currentChar();
+        while (Character.isDigit(ch)) {
+            sb.append(ch);
+            ch = nextChar();
         }
-        if (col < row.length() && row.charAt(col) == '.') {
-            sb.append(row.charAt(col));
-            col++;
-            while (col < row.length() && Character.isDigit(row.charAt(col))) {
-                sb.append(row.charAt(col));
-                col++;
+        if (ch == '.') {
+            sb.append(ch);
+            ch = nextChar();
+            while (Character.isDigit(ch)) {
+                sb.append(ch);
+                ch = nextChar();
             }
             value = Float.valueOf(sb.toString());
         } else {
@@ -93,16 +97,29 @@ public class Lexer {
 
     private Token stringValue() {
         StringBuilder sb = new StringBuilder();
-        col++;
-        while (row.charAt(col) != '"') {
-            sb.append(row.charAt(col));
-            col++;
+        char ch = nextChar();
+        while (ch != '"') {
+            sb.append(ch);
+            ch = nextChar();
             if (col == row.length()) {
                 throw new LexerException("Illegal line end in string literal");
             }
         }
         col++;
         return new Value(sb.toString());
+    }
+
+    private char nextChar() {
+        col++;
+        return currentChar();
+    }
+
+    private char currentChar() {
+        if (col < row.length()) {
+            return row.charAt(col);
+        } else {
+            return '\n';
+        }
     }
 
     private void readNextLine() {
