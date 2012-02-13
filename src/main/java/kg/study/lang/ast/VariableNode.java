@@ -2,12 +2,12 @@ package kg.study.lang.ast;
 
 import kg.study.lang.NodeType;
 
-public class VarNode extends Node {
+public class VariableNode extends Node {
 
     private final String name;
 
-    protected VarNode(String name) {
-        super(NodeType.VAR);
+    protected VariableNode(String name) {
+        super(NodeType.VARIABLE);
         this.name = name;
     }
 

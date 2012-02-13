@@ -5,7 +5,7 @@ import static kg.study.lang.ast.NodeFactory.*;
 import kg.study.lang.ast.BinaryOperation;
 import kg.study.lang.ast.Node;
 import kg.study.lang.ast.SeqNode;
-import kg.study.lang.ast.VarNode;
+import kg.study.lang.ast.VariableNode;
 import kg.study.lang.lexer.Identifier;
 import kg.study.lang.lexer.Keyword;
 import kg.study.lang.lexer.Lexer;
@@ -27,24 +27,24 @@ public class PredictiveParser {
         Node node;
         if (currentToken instanceof Identifier) {
             node = var(((Identifier) currentToken).getName());
-            nextExpression();
+            nextToken();
         } else if (currentToken instanceof Value) {
             node = constant((Integer) ((Value) currentToken).getValue());
-            nextExpression();
+            nextToken();
         } else {
             node = paren();
         }
         return node;
     }
 
-    private void nextExpression() {
+    private void nextToken() {
         currentToken = lexer.next();
     }
 
     private Node compare() {
         Node node = sum();
         if (currentToken == Symbol.LT) {
-            nextExpression();
+            nextToken();
             node = lt(node, sum());
         }
         return node;
@@ -54,10 +54,10 @@ public class PredictiveParser {
         Node node = term();
         while (currentToken == Symbol.PLUS || currentToken == Symbol.MINUS) {
             if (currentToken == Symbol.PLUS) {
-                nextExpression();
+                nextToken();
                 node = add(node, term());
             } else {
-                nextExpression();
+                nextToken();
                 node = sub(node, term());
             }
         }
@@ -69,9 +69,9 @@ public class PredictiveParser {
             return compare();
         }
         Node node = compare();
-        if (node.getType() == NodeType.VAR && currentToken == Symbol.ASSIGN) {
-            nextExpression();
-            node = set((VarNode) node, expression());
+        if (node.getType() == NodeType.VARIABLE && currentToken == Symbol.ASSIGN) {
+            nextToken();
+            node = assign((VariableNode) node, expression());
         }
         return node;
     }
@@ -80,67 +80,67 @@ public class PredictiveParser {
         if (currentToken != Symbol.LPAR) {
             throw new IllegalArgumentException("'(' expected");
         }
-        nextExpression();
+        nextToken();
         Node node = expression();
         if (currentToken != Symbol.RPAR) {
             throw new IllegalArgumentException("')' expected");
         }
-        nextExpression();
+        nextToken();
         return node;
     }
 
     private Node statement() {
         Node node;
         if (currentToken == Keyword.IF) {
-            nextExpression();
+            nextToken();
             if (currentToken == Keyword.ELSE) {
                 Node parenNode = paren();
                 Node statementNode = statement();
-                nextExpression();
+                nextToken();
                 node = ifElseNode((BinaryOperation) parenNode, statementNode, statement());
             } else {
                 node = ifNode((BinaryOperation) paren(), statement());
             }
         } else if (currentToken == Keyword.WHILE) {
-            nextExpression();
+            nextToken();
             node = whileNode((BinaryOperation) paren(), statement());
         } else if (currentToken == Keyword.DO) {
-            nextExpression();
+            nextToken();
             Node statement = statement();
             if (currentToken != Keyword.WHILE) {
                 throw new IllegalArgumentException("'while' expected");
             }
-            nextExpression();
+            nextToken();
             if (currentToken != Symbol.SEMICOLON) {
                 throw new IllegalArgumentException("';' expected");
             }
             node = doNode((BinaryOperation) paren(), statement);
         } else if (currentToken == Symbol.SEMICOLON) {
             node = emptyNode();
-            nextExpression();
+            nextToken();
         } else if (currentToken == Symbol.LBRA) {
             node = seq();
-            nextExpression();
+            nextToken();
             while (currentToken != Symbol.RBRA) {
                 ((SeqNode) node).addChild(statement());
             }
-            nextExpression();
+            nextToken();
         } else if (currentToken == Keyword.PRINT) {
-            nextExpression();
-            node = print((VarNode) paren());
+            nextToken();
+            node = print((VariableNode) paren());
         } else {
             node = expr(expression());
             if (currentToken != Symbol.SEMICOLON) {
                 throw new IllegalArgumentException("';' expected");
             }
-            nextExpression();
+            nextToken();
         }
 
         return node;
     }
 
     public Node parse() {
-        nextExpression();
+        nextToken();
         Node node = program((SeqNode) statement());
         if (currentToken != Token.EOF) {
             throw new IllegalArgumentException("Invalid statement syntax");

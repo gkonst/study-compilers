@@ -1,10 +1,10 @@
 package kg.study.lang.compiler;
 
+import static kg.study.lang.ast.NodeFactory.assign;
 import static kg.study.lang.ast.NodeFactory.constant;
 import static kg.study.lang.ast.NodeFactory.print;
 import static kg.study.lang.ast.NodeFactory.program;
 import static kg.study.lang.ast.NodeFactory.seq;
-import static kg.study.lang.ast.NodeFactory.set;
 import static kg.study.lang.ast.NodeFactory.var;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 public class JasminCompilerTest {
 
     public static final Node SET_AND_PRINT_NODE = program(
-            seq(set(var("a"), constant(3)), print(var("a"))));
+            seq(assign(var("a"), constant(3)), print(var("a"))));
 
     @Test
     public void compileShouldNotFailIfEmptyNodeGiven() throws Exception {

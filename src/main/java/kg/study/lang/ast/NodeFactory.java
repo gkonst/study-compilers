@@ -1,8 +1,8 @@
 package kg.study.lang.ast;
 
 public class NodeFactory {
-    public static VarNode var(String name) {
-        return new VarNode(name);
+    public static VariableNode var(String name) {
+        return new VariableNode(name);
     }
 
     public static ConstNode constant(int value) {
@@ -21,8 +21,8 @@ public class NodeFactory {
         return new LTNode(left, right);
     }
 
-    public static SetNode set(VarNode var, Node constant) {
-        return new SetNode(var, constant);
+    public static AssignNode assign(VariableNode var, Node constant) {
+        return new AssignNode(var, constant);
     }
 
     public static ProgramNode program(SeqNode child) {
@@ -41,7 +41,7 @@ public class NodeFactory {
         return new IfElseNode(condition, body, elseBody);
     }
 
-    public static PrintNode print(VarNode var) {
+    public static PrintNode print(VariableNode var) {
         return new PrintNode(var);
     }
 
@@ -57,8 +57,8 @@ public class NodeFactory {
         return new SeqNode(children);
     }
 
-    public static ExprNode expr(Node child) {
-        return new ExprNode(child);
+    public static ExpressionNode expr(Node child) {
+        return new ExpressionNode(child);
     }
 
     public static DoNode doNode(BinaryOperation condition, Node body) {

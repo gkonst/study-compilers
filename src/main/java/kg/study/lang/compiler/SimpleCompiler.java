@@ -3,9 +3,10 @@ package kg.study.lang.compiler;
 import static kg.study.vm.OperationCode.*;
 
 import kg.study.lang.ast.AddNode;
+import kg.study.lang.ast.AssignNode;
 import kg.study.lang.ast.ConstNode;
 import kg.study.lang.ast.DoNode;
-import kg.study.lang.ast.ExprNode;
+import kg.study.lang.ast.ExpressionNode;
 import kg.study.lang.ast.IfElseNode;
 import kg.study.lang.ast.IfNode;
 import kg.study.lang.ast.LTNode;
@@ -13,9 +14,8 @@ import kg.study.lang.ast.Node;
 import kg.study.lang.ast.PrintNode;
 import kg.study.lang.ast.ProgramNode;
 import kg.study.lang.ast.SeqNode;
-import kg.study.lang.ast.SetNode;
 import kg.study.lang.ast.SubNode;
-import kg.study.lang.ast.VarNode;
+import kg.study.lang.ast.VariableNode;
 import kg.study.lang.ast.WhileNode;
 import kg.study.vm.Instruction;
 import kg.study.vm.OperationCode;
@@ -58,8 +58,8 @@ public class SimpleCompiler implements Compiler {
 
     public void compile(Node node) {
         switch (node.getType()) {
-            case VAR:
-                addInstruction(IFETCH, getLocalIndex(((VarNode) node).getName()));
+            case VARIABLE:
+                addInstruction(IFETCH, getLocalIndex(((VariableNode) node).getName()));
                 break;
             case CONST:
                 addInstruction(IPUSH, ((ConstNode) node).getValue());
@@ -79,9 +79,9 @@ public class SimpleCompiler implements Compiler {
                 compile(((LTNode) node).getRight());
                 addInstruction(ILT);
                 break;
-            case SET:
-                compile(((SetNode) node).getValue());
-                addInstruction(ISTORE, getLocalIndex(((SetNode) node).getVariable().getName()));
+            case ASSIGN:
+                compile(((AssignNode) node).getValue());
+                addInstruction(ISTORE, getLocalIndex(((AssignNode) node).getVariable().getName()));
                 break;
             case IF: {
                 compile(((IfNode) node).getCondition());
@@ -125,8 +125,8 @@ public class SimpleCompiler implements Compiler {
                     compile(child);
                 }
                 break;
-            case EXPR:
-                compile(((ExprNode) node).getChild());
+            case EXPRESSION:
+                compile(((ExpressionNode) node).getChild());
                 /// i think this useless
                 addInstruction(IPOP);
                 break;

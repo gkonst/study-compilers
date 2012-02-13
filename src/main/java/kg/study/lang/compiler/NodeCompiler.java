@@ -1,12 +1,12 @@
 package kg.study.lang.compiler;
 
+import kg.study.lang.ast.AssignNode;
 import kg.study.lang.ast.ConstNode;
 import kg.study.lang.ast.Node;
 import kg.study.lang.ast.PrintNode;
 import kg.study.lang.ast.ProgramNode;
 import kg.study.lang.ast.SeqNode;
-import kg.study.lang.ast.SetNode;
-import kg.study.lang.ast.VarNode;
+import kg.study.lang.ast.VariableNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +30,10 @@ public class NodeCompiler {
                     compileNode(child);
                 }
                 break;
-            case SET: {
-                compileNode(((SetNode) node).getValue());
+            case ASSIGN: {
+                compileNode(((AssignNode) node).getValue());
                 Integer localIndex;
-                String varCode = ((SetNode) node).getVariable().getName();
+                String varCode = ((AssignNode) node).getVariable().getName();
                 if (locals.containsKey(varCode)) {
                     localIndex = locals.get(varCode);
                 } else {
@@ -57,8 +57,8 @@ public class NodeCompiler {
                 compileNode(((PrintNode) node).getVariable());
                 result.append("\tinvokevirtual java/io/PrintStream/println(I)V\n");
                 break;
-            case VAR: {
-                int localIndex = locals.get(((VarNode) node).getName());
+            case VARIABLE: {
+                int localIndex = locals.get(((VariableNode) node).getName());
                 result.append("\tiload ");
                 result.append(localIndex);
                 result.append("\n");

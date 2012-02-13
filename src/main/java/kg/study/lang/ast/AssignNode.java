@@ -2,17 +2,17 @@ package kg.study.lang.ast;
 
 import kg.study.lang.NodeType;
 
-public class SetNode extends Node {
-    private VarNode variable;
+public class AssignNode extends Node {
+    private VariableNode variable;
     private Node value;
 
-    public SetNode(VarNode variable, Node value) {
-        super(NodeType.SET);
+    public AssignNode(VariableNode variable, Node value) {
+        super(NodeType.ASSIGN);
         this.variable = variable;
         this.value = value;
     }
 
-    public VarNode getVariable() {
+    public VariableNode getVariable() {
         return variable;
     }
 

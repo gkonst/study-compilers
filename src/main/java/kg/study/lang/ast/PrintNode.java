@@ -3,14 +3,14 @@ package kg.study.lang.ast;
 import kg.study.lang.NodeType;
 
 public class PrintNode extends Node {
-    private VarNode variable;
+    private VariableNode variable;
 
-    public PrintNode(VarNode variable) {
+    public PrintNode(VariableNode variable) {
         super(NodeType.PRINT);
         this.variable = variable;
     }
 
-    public VarNode getVariable() {
+    public VariableNode getVariable() {
         return variable;
     }
 }
