@@ -11,6 +11,7 @@ public enum Keyword implements Token {
     WHILE("while"),
     DEF("def"),
     VAL("val"),
+    VAR("var"),
     PRINT("print");
 
     private final String text;

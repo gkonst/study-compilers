@@ -9,6 +9,7 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -138,16 +139,69 @@ public class LexerTest {
         assertEquals(result.get(15), Symbol.RBRA);
     }
 
+
+    @Test
+    public void nextShouldReturnTokensIfComplexSymbolsExist() throws Exception {
+        // given
+        final String given = "def foo() {\n" +
+                "val a = 4\n" +
+                "var b\n" +
+                "if(a==3) {\n" +
+                "b = 0\n" +
+                "} else {\n" +
+                "b = 3\n" +
+                "}\n" +
+                "}";
+        final Lexer lexer = Lexer.forString(given);
+        final List<Token> result = new LinkedList<>();
+        Token expression;
+        // when
+        while ((expression = lexer.next()) != Token.EOF) {
+            result.add(expression);
+        }
+        // then
+        Iterator<Token> it = result.iterator();
+        assertThat(result, hasSize(29));
+        assertEquals(it.next(), Keyword.DEF);
+        assertIdentifier(it.next(), "foo");
+        assertEquals(it.next(), Symbol.LPAR);
+        assertEquals(it.next(), Symbol.RPAR);
+        assertEquals(it.next(), Symbol.LBRA);
+        assertEquals(it.next(), Keyword.VAL);
+        assertIdentifierWithValue(it, "a", 4);
+        assertEquals(it.next(), Keyword.VAR);
+        assertIdentifier(it.next(), "b");
+        assertEquals(it.next(), Keyword.IF);
+        assertEquals(it.next(), Symbol.LPAR);
+        assertIdentifier(it.next(), "a");
+        assertEquals(it.next(), ComplexSymbol.EQUAL);
+        assertValueExpression(it.next(), 3);
+        assertEquals(it.next(), Symbol.RPAR);
+        assertEquals(it.next(), Symbol.LBRA);
+        assertIdentifierWithValue(it, "b", 0);
+        assertEquals(it.next(), Symbol.RBRA);
+        assertEquals(it.next(), Keyword.ELSE);
+        assertEquals(it.next(), Symbol.LBRA);
+        assertIdentifierWithValue(it, "b", 3);
+        assertEquals(it.next(), Symbol.RBRA);
+        assertEquals(it.next(), Symbol.RBRA);
+    }
+
     private void assertValueEquals(Token value, Object equalsTo) {
         assertTrue(value instanceof Value);
         assertEquals(((Value) value).getValue(), equalsTo);
+    }
+
+    private static void assertIdentifierWithValue(Iterator<Token> it, String name, int value) {
+        assertIdentifier(it.next(), name);
+        assertEquals(it.next(), Symbol.ASSIGN);
+        assertValueExpression(it.next(), value);
     }
 
     private static void assertIdentifierWithValue(List<Token> result, int startPosition, String name, int value) {
         assertIdentifier(result.get(startPosition), name);
         assertEquals(result.get(++startPosition), Symbol.ASSIGN);
         assertValueExpression(result.get(++startPosition), value);
-        assertEquals(result.get(++startPosition), Symbol.SEMICOLON);
     }
 
     private static void assertIdentifier(Token expression, String name) {

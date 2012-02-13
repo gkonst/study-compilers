@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.Arrays;
 
 public class Lexer {
 
@@ -41,7 +42,20 @@ public class Lexer {
 
             if (Character.isSpaceChar(ch)) {
                 col++;
-            } else if (Symbol.VALUES.containsKey(ch)) {
+                continue;
+            }
+
+            if (Arrays.binarySearch(ComplexSymbol.START_SYMBOLS, ch) >= 0) {
+                String complex = "" + ch + nextChar();
+                if (ComplexSymbol.VALUES.containsKey(complex)) {
+                    col++;
+                    return ComplexSymbol.VALUES.get(complex);
+                } else {
+                    col--;
+                }
+            }
+
+            if (Symbol.VALUES.containsKey(ch)) {
                 col++;
                 return Symbol.VALUES.get(ch);
             } else if (Character.isDigit(ch)) {
