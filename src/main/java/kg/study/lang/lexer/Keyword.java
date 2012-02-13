@@ -1,5 +1,6 @@
 package kg.study.lang.lexer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,22 +9,22 @@ public enum Keyword implements Token {
     ELSE("else"),
     DO("do"),
     WHILE("while"),
+    DEF("def"),
+    VAL("val"),
     PRINT("print");
 
     private final String text;
-    private static Map<String, Keyword> mapOfValues;
+    public static final Map<String, Keyword> VALUES;
 
     private Keyword(String text) {
         this.text = text;
     }
 
-    public static Map<String, Keyword> mapOfValues() {
-        if (mapOfValues == null) {
-            mapOfValues = new HashMap<>();
-            for (Keyword symbol : values()) {
-                mapOfValues.put(symbol.text, symbol);
-            }
+    static {
+        Map<String, Keyword> map = new HashMap<>();
+        for (Keyword symbol : values()) {
+            map.put(symbol.text, symbol);
         }
-        return mapOfValues;
+        VALUES = Collections.unmodifiableMap(map);
     }
 }

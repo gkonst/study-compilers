@@ -37,13 +37,13 @@ public class LexerTest {
 
     @Test(expectedExceptions = LexerException.class)
     public void nextShouldFailIfStringLiteralIsNotClosedAndEOF() {
-        // given
+        // given         Token result = 
         String given = "\"foo";
         Lexer lexer = Lexer.forString(given);
         // when
-        Token result = lexer.next();
+        lexer.next();
         // then
-        //  exception should be raised
+        //  exception should be thrown
     }
 
     @Test(expectedExceptions = LexerException.class)
@@ -52,9 +52,9 @@ public class LexerTest {
         String given = "\"foo\n\"bar\"";
         Lexer lexer = Lexer.forString(given);
         // when
-        Token result = lexer.next();
+        lexer.next();
         // then
-        //  exception should be raised
+        //  exception should be thrown
     }
 
     @Test
@@ -74,6 +74,30 @@ public class LexerTest {
         assertEquals(result4, Token.EOF);
     }
 
+    @Test(expectedExceptions = LexerException.class)
+    public void nextShouldFailIfIdentifierStartsFromDigits() throws Exception {
+        // given
+        String given = "100a";
+        Lexer lexer = Lexer.forString(given);
+        // when
+        lexer.next();
+        // then
+        //  exception should be thrown
+    }
+
+    @Test
+    public void nextShouldFailIfIdentifierContainsDigits() throws Exception {
+        // given
+        String given = "a1a";
+        Lexer lexer = Lexer.forString(given);
+        // when
+        Token result1 = lexer.next();
+        Token result2 = lexer.next();
+        // then
+        assertIdentifier(result1, "a1a");
+        assertEquals(result2, Token.EOF);
+    }
+
     @Test
     public void nextShouldWorkIfIdentifierIsInTheEnd() throws Exception {
         // given
@@ -87,11 +111,6 @@ public class LexerTest {
         assertValueEquals(result1, 100);
         assertIdentifier(result2, "a");
         assertEquals(result3, Token.EOF);
-    }
-
-    private void assertValueEquals(Token value, Object equalsTo) {
-        assertTrue(value instanceof Value);
-        assertEquals(((Value) value).getValue(), equalsTo);
     }
 
     @Test
@@ -112,16 +131,21 @@ public class LexerTest {
         assertEquals(result.get(5), Keyword.IF);
         assertEquals(result.get(6), Symbol.LPAR);
         assertIdentifier(result.get(7), "a");
-        assertEquals(result.get(8), Symbol.LESS);
+        assertEquals(result.get(8), Symbol.LT);
         assertValueExpression(result.get(9), 0);
         assertEquals(result.get(10), Symbol.RPAR);
         assertIdentifierWithValue(result, 11, "a", 5);
         assertEquals(result.get(15), Symbol.RBRA);
     }
 
+    private void assertValueEquals(Token value, Object equalsTo) {
+        assertTrue(value instanceof Value);
+        assertEquals(((Value) value).getValue(), equalsTo);
+    }
+
     private static void assertIdentifierWithValue(List<Token> result, int startPosition, String name, int value) {
         assertIdentifier(result.get(startPosition), name);
-        assertEquals(result.get(++startPosition), Symbol.EQ);
+        assertEquals(result.get(++startPosition), Symbol.ASSIGN);
         assertValueExpression(result.get(++startPosition), value);
         assertEquals(result.get(++startPosition), Symbol.SEMICOLON);
     }

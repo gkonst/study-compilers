@@ -41,9 +41,9 @@ public class Lexer {
 
             if (Character.isSpaceChar(ch)) {
                 col++;
-            } else if (Symbol.mapOfValues().containsKey(ch)) {
+            } else if (Symbol.VALUES.containsKey(ch)) {
                 col++;
-                return Symbol.mapOfValues().get(ch);
+                return Symbol.VALUES.get(ch);
             } else if (Character.isDigit(ch)) {
                 return numberValue();
             } else if (ch == '"') {
@@ -59,13 +59,13 @@ public class Lexer {
     private Token identifierOrKeyword() {
         StringBuilder sb = new StringBuilder();
         char ch = currentChar();
-        while (Character.isLetter(ch)) {
+        while (Character.isLetterOrDigit(ch)) {
             sb.append(ch);
             ch = nextChar();
         }
         String word = sb.toString();
-        if (Keyword.mapOfValues().containsKey(word)) {
-            return Keyword.mapOfValues().get(word);
+        if (Keyword.VALUES.containsKey(word)) {
+            return Keyword.VALUES.get(word);
         } else {
             return new Identifier(word);
         }
@@ -90,6 +90,9 @@ public class Lexer {
             value = Float.valueOf(sb.toString());
         } else {
             value = Integer.valueOf(sb.toString());
+        }
+        if (Character.isLetter(ch)) {
+            throw new LexerException("Unexpected character in number literal : " + ch, row, col);
         }
         result = new Value(value);
         return result;

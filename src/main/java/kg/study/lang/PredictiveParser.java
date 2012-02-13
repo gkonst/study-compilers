@@ -1,5 +1,7 @@
 package kg.study.lang;
 
+import static kg.study.lang.ast.NodeFactory.*;
+
 import kg.study.lang.ast.BinaryOperation;
 import kg.study.lang.ast.Node;
 import kg.study.lang.ast.SeqNode;
@@ -11,27 +13,11 @@ import kg.study.lang.lexer.Symbol;
 import kg.study.lang.lexer.Token;
 import kg.study.lang.lexer.Value;
 
-import static kg.study.lang.ast.NodeFactory.add;
-import static kg.study.lang.ast.NodeFactory.constant;
-import static kg.study.lang.ast.NodeFactory.doNode;
-import static kg.study.lang.ast.NodeFactory.emptyNode;
-import static kg.study.lang.ast.NodeFactory.expr;
-import static kg.study.lang.ast.NodeFactory.ifElseNode;
-import static kg.study.lang.ast.NodeFactory.ifNode;
-import static kg.study.lang.ast.NodeFactory.lt;
-import static kg.study.lang.ast.NodeFactory.print;
-import static kg.study.lang.ast.NodeFactory.program;
-import static kg.study.lang.ast.NodeFactory.seq;
-import static kg.study.lang.ast.NodeFactory.set;
-import static kg.study.lang.ast.NodeFactory.sub;
-import static kg.study.lang.ast.NodeFactory.var;
-import static kg.study.lang.ast.NodeFactory.whileNode;
-
 
 public class PredictiveParser {
 
     private final Lexer lexer;
-    private Token currentExpression;
+    private Token currentToken;
 
     public PredictiveParser(Lexer lexer) {
         this.lexer = lexer;
@@ -39,11 +25,11 @@ public class PredictiveParser {
 
     private Node term() {
         Node node;
-        if (currentExpression instanceof Identifier) {
-            node = var(((Identifier) currentExpression).getName());
+        if (currentToken instanceof Identifier) {
+            node = var(((Identifier) currentToken).getName());
             nextExpression();
-        } else if (currentExpression instanceof Value) {
-            node = constant((Integer) ((Value) currentExpression).getValue());
+        } else if (currentToken instanceof Value) {
+            node = constant((Integer) ((Value) currentToken).getValue());
             nextExpression();
         } else {
             node = paren();
@@ -52,12 +38,12 @@ public class PredictiveParser {
     }
 
     private void nextExpression() {
-        currentExpression = lexer.next();
+        currentToken = lexer.next();
     }
 
     private Node compare() {
         Node node = sum();
-        if (currentExpression == Symbol.LESS) {
+        if (currentToken == Symbol.LT) {
             nextExpression();
             node = lt(node, sum());
         }
@@ -66,8 +52,8 @@ public class PredictiveParser {
 
     private Node sum() {
         Node node = term();
-        while (currentExpression == Symbol.PLUS || currentExpression == Symbol.MINUS) {
-            if (currentExpression == Symbol.PLUS) {
+        while (currentToken == Symbol.PLUS || currentToken == Symbol.MINUS) {
+            if (currentToken == Symbol.PLUS) {
                 nextExpression();
                 node = add(node, term());
             } else {
@@ -79,11 +65,11 @@ public class PredictiveParser {
     }
 
     private Node expression() {
-        if (!(currentExpression instanceof Identifier)) {
+        if (!(currentToken instanceof Identifier)) {
             return compare();
         }
         Node node = compare();
-        if (node.getType() == NodeType.VAR && currentExpression == Symbol.EQ) {
+        if (node.getType() == NodeType.VAR && currentToken == Symbol.ASSIGN) {
             nextExpression();
             node = set((VarNode) node, expression());
         }
@@ -91,12 +77,12 @@ public class PredictiveParser {
     }
 
     private Node paren() {
-        if (currentExpression != Symbol.LPAR) {
+        if (currentToken != Symbol.LPAR) {
             throw new IllegalArgumentException("'(' expected");
         }
         nextExpression();
         Node node = expression();
-        if (currentExpression != Symbol.RPAR) {
+        if (currentToken != Symbol.RPAR) {
             throw new IllegalArgumentException("')' expected");
         }
         nextExpression();
@@ -105,9 +91,9 @@ public class PredictiveParser {
 
     private Node statement() {
         Node node;
-        if (currentExpression == Keyword.IF) {
+        if (currentToken == Keyword.IF) {
             nextExpression();
-            if (currentExpression == Keyword.ELSE) {
+            if (currentToken == Keyword.ELSE) {
                 Node parenNode = paren();
                 Node statementNode = statement();
                 nextExpression();
@@ -115,36 +101,36 @@ public class PredictiveParser {
             } else {
                 node = ifNode((BinaryOperation) paren(), statement());
             }
-        } else if (currentExpression == Keyword.WHILE) {
+        } else if (currentToken == Keyword.WHILE) {
             nextExpression();
             node = whileNode((BinaryOperation) paren(), statement());
-        } else if (currentExpression == Keyword.DO) {
+        } else if (currentToken == Keyword.DO) {
             nextExpression();
             Node statement = statement();
-            if (currentExpression != Keyword.WHILE) {
+            if (currentToken != Keyword.WHILE) {
                 throw new IllegalArgumentException("'while' expected");
             }
             nextExpression();
-            if (currentExpression != Symbol.SEMICOLON) {
+            if (currentToken != Symbol.SEMICOLON) {
                 throw new IllegalArgumentException("';' expected");
             }
             node = doNode((BinaryOperation) paren(), statement);
-        } else if (currentExpression == Symbol.SEMICOLON) {
+        } else if (currentToken == Symbol.SEMICOLON) {
             node = emptyNode();
             nextExpression();
-        } else if (currentExpression == Symbol.LBRA) {
+        } else if (currentToken == Symbol.LBRA) {
             node = seq();
             nextExpression();
-            while (currentExpression != Symbol.RBRA) {
+            while (currentToken != Symbol.RBRA) {
                 ((SeqNode) node).addChild(statement());
             }
             nextExpression();
-        } else if (currentExpression == Keyword.PRINT) {
+        } else if (currentToken == Keyword.PRINT) {
             nextExpression();
             node = print((VarNode) paren());
         } else {
             node = expr(expression());
-            if (currentExpression != Symbol.SEMICOLON) {
+            if (currentToken != Symbol.SEMICOLON) {
                 throw new IllegalArgumentException("';' expected");
             }
             nextExpression();
@@ -156,7 +142,7 @@ public class PredictiveParser {
     public Node parse() {
         nextExpression();
         Node node = program((SeqNode) statement());
-        if (currentExpression != Token.EOF) {
+        if (currentToken != Token.EOF) {
             throw new IllegalArgumentException("Invalid statement syntax");
         }
         return node;
