@@ -20,56 +20,13 @@
                     <target>1.7</target>
                     <testSource>1.7</testSource>
                     <testTarget>1.7</testTarget>
-                    <encoding>UTF-8</encoding>
-                    <fork>true</fork>
-                    <compilerVersion>1.7</compilerVersion>
-                    <executable>${jdk7.javac}</executable>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.11</version>
-                <configuration>
-                    <jvm>${jdk7.java}</jvm>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.8</version>
-                <configuration>
-                    <jvm>${jdk7.java}</jvm>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>verify</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
 
     <properties>
-        <jdk7>/usr/lib/jvm/icedtea-7</jdk7>
-        <jdk7.javac>${jdk7}/bin/javac</jdk7.javac>
-        <jdk7.java>${jdk7}/bin/java</jdk7.java>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
