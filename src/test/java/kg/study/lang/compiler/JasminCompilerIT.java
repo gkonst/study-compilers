@@ -20,7 +20,7 @@ import java.net.URLClassLoader;
 
 public class JasminCompilerIT {
 
-    public static final File TEST_DIR = new File("target/test-jasmin-compiler");
+    public static final File TEST_DIR = new File("target", "test-jasmin-compiler");
     private static final String CLASS_NAME = "HelloWorld";
     private static final String CLASS_FILE_NAME = CLASS_NAME + ".j";
 
@@ -31,7 +31,7 @@ public class JasminCompilerIT {
 
     @AfterMethod
     public void tearDown() throws Exception {
-        FileUtils.deleteDirectory(TEST_DIR);
+//        FileUtils.deleteDirectory(TEST_DIR);
     }
 
     @Test
