@@ -30,7 +30,7 @@ class LexerSpec extends Specification {
         thrown LexerException
     }
 
-    def "next should fail if string literal isn't closed and EOL is reached"() {
+    void "next should fail if string literal isn't closed and EOL is reached"() {
         given:
         def input = '"foo\n"bar"'
         def lexer = Lexer.forString(input)
@@ -42,7 +42,7 @@ class LexerSpec extends Specification {
         thrown LexerException
     }
 
-    def "next should work if multiline string is given"() {
+    void "next should work if multiline string is given"() {
         expect:
         assertValue lexer.next(), 100
         assertValue lexer.next(), 5
@@ -54,7 +54,7 @@ class LexerSpec extends Specification {
         lexer = Lexer.forString(input)
     }
 
-    def "next should fail if identifier starts from digits"() {
+    void "next should fail if identifier starts from digits"() {
         given:
         def given = '100a'
         def lexer = Lexer.forString(given)
@@ -66,7 +66,7 @@ class LexerSpec extends Specification {
         thrown LexerException
     }
 
-    def "next should work if identifier contains digits"() {
+    void "next should work if identifier contains digits"() {
         expect:
         assertIdentifier lexer.next(), 'a1a'
         assert lexer.next() == Token.EOF
@@ -76,7 +76,7 @@ class LexerSpec extends Specification {
         lexer = Lexer.forString(given)
     }
 
-    def "next should work if identifier is in the end"() {
+    void "next should work if identifier is in the end"() {
         expect:
         assertValue lexer.next(), 100
         assertIdentifier lexer.next(), 'a'
@@ -87,7 +87,7 @@ class LexerSpec extends Specification {
         lexer = Lexer.forString(given)
     }
 
-    def "next should work with various input lexems"() {
+    void "next should work with various input lexems"() {
         expect:
         assert lexer.next() == Symbol.LBRA
         assertIdentifierWithValue lexer, 'a', 3
@@ -109,7 +109,7 @@ class LexerSpec extends Specification {
         lexer = Lexer.forString(given)
     }
 
-    def "next should work if complex symbols exist in input"() {
+    void "next should work if complex symbols exist in input"() {
         expect:
         assert lexer.next() == Keyword.DEF
         assertIdentifier lexer.next(), 'foo'
