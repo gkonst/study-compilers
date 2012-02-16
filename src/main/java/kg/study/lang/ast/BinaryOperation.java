@@ -26,7 +26,7 @@ public abstract class BinaryOperation extends Node {
     public static Node parse(Node left, ParserContext ctx) {
         switch ((Symbol) ctx.nextToken()) {
             case PLUS:
-                return new AddNode(left, ExpressionNode.parse(ctx));
+                return new SumNode(left, ExpressionNode.parse(ctx));
             case MINUS:
                 return new SubNode(left, ExpressionNode.parse(ctx));
             case LT:
@@ -34,5 +34,13 @@ public abstract class BinaryOperation extends Node {
             default:
                 throw new UnsupportedOperationException("Not implemented yet for symbol : " + ctx.currentToken);
         }
+    }
+
+    @Override
+    public String toString() {
+        return getType() + "{" +
+                "left=" + left +
+                ", right=" + right +
+                '}';
     }
 }

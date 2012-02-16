@@ -9,8 +9,8 @@ public class NodeFactory {
         return new ConstNode(value);
     }
 
-    public static AddNode add(Node left, Node right) {
-        return new AddNode(left, right);
+    public static SumNode add(Node left, Node right) {
+        return new SumNode(left, right);
     }
 
     public static SubNode sub(Node left, Node right) {

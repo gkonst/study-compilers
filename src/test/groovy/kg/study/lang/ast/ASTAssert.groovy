@@ -47,8 +47,8 @@ final class ASTAssert {
     }
 
     static shouldBeSum(node, Closure assertions) {
-        assert node instanceof AddNode
-        assert node.type == NodeType.ADD
+        assert node instanceof SumNode
+        assert node.type == NodeType.SUM
         assertions.delegate = node
         assertions.resolveStrategy = Closure.DELEGATE_FIRST
         assertions()

@@ -13,4 +13,9 @@ public class ConstNode extends Node {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return getType() + "{" + value + '}';
+    }
 }

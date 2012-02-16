@@ -2,7 +2,6 @@ package kg.study.lang.compiler;
 
 import static kg.study.vm.OperationCode.*;
 
-import kg.study.lang.ast.AddNode;
 import kg.study.lang.ast.AssignNode;
 import kg.study.lang.ast.ConstNode;
 import kg.study.lang.ast.DoNode;
@@ -15,6 +14,7 @@ import kg.study.lang.ast.PrintNode;
 import kg.study.lang.ast.ProgramNode;
 import kg.study.lang.ast.SeqNode;
 import kg.study.lang.ast.SubNode;
+import kg.study.lang.ast.SumNode;
 import kg.study.lang.ast.VariableNode;
 import kg.study.lang.ast.WhileNode;
 import kg.study.vm.Instruction;
@@ -64,9 +64,9 @@ public class SimpleCompiler implements Compiler {
             case CONST:
                 addInstruction(IPUSH, ((ConstNode) node).getValue());
                 break;
-            case ADD:
-                compile(((AddNode) node).getLeft());
-                compile(((AddNode) node).getRight());
+            case SUM:
+                compile(((SumNode) node).getLeft());
+                compile(((SumNode) node).getRight());
                 addInstruction(IADD);
                 break;
             case SUB:
