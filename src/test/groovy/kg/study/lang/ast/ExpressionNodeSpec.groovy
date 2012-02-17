@@ -8,7 +8,7 @@ import spock.lang.Specification
 class ExpressionNodeSpec extends Specification {
 
     def setupSpec() {
-        Node.metaClass.mixin(ASTAssert)
+        Node.metaClass.mixin(ASTMatchers)
     }
 
     def cleanupSpec() {
@@ -17,28 +17,28 @@ class ExpressionNodeSpec extends Specification {
 
     void "parse should work if identifier is given"() {
         expect:
-        treeFor 'a if' shouldBeVariable 'a'
+        treeFor 'a if' shouldBe VariableNode, 'a'
     }
 
     void "parse should work if value is given"() {
         expect:
-        treeFor '1 \nwhile' shouldBeConstant 1
+        treeFor '1 \nwhile' shouldBe ConstNode, 1
     }
 
     void "parse should work if arithmetic operation is given"() {
         expect:
-        treeFor 'a + 1 \nif' shouldBeSum {
+        treeFor 'a + 1 \nif' shouldBe SumNode, {
             left.shouldBeVariable 'a'
-            right.shouldBeConstant 1
+            right.shouldBeConst 1
         }
     }
 
     void "parse should work if two arithmetic operations are given"() {
         expect:
-        treeFor 'a + 1 + b \nif' shouldBeSum {
+        treeFor 'a + 1 + b \nif' shouldBe SumNode, {
             left.shouldBeVariable 'a'
-            right.shouldBeSum {
-                left.shouldBeConstant 1
+            right.shouldBe SumNode, {
+                left.shouldBeConst 1
                 right.shouldBeVariable 'b'
             }
         }
@@ -46,25 +46,25 @@ class ExpressionNodeSpec extends Specification {
 
     void "parse should work if arithmetic operations with parens are given"() {
         expect:
-        treeFor '5 + (6 - 1) \nif' shouldBeSum {
-            left.shouldBeConstant 5
-            right.shouldBeSub {
-                left.shouldBeConstant 6
-                right.shouldBeConstant 1
+        treeFor '5 + (6 - 1) \nif' shouldBe SumNode, {
+            left.shouldBeConst 5
+            right.shouldBe SubNode, {
+                left.shouldBeConst 6
+                right.shouldBeConst 1
             }
         }
     }
 
     void "parse should work if arithmetic and compare operations are given"() {
         expect:
-        treeFor '(a + 1) < (10 - 5) \nif' shouldBeLT {
-            left.shouldBeSum {
+        treeFor '(a + 1) < (10 - 5) \nif' shouldBe LTNode, {
+            left.shouldBe SumNode, {
                 left.shouldBeVariable 'a'
-                right.shouldBeConstant 1
+                right.shouldBeConst 1
             }
-            right.shouldBeSub {
-                left.shouldBeConstant 10
-                right.shouldBeConstant 5
+            right.shouldBe SubNode, {
+                left.shouldBeConst 10
+                right.shouldBeConst 5
             }
         }
     }

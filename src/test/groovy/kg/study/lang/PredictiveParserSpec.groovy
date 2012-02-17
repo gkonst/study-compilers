@@ -1,19 +1,30 @@
 package kg.study.lang;
 
 
+import kg.study.lang.ast.ASTMatchers
+import kg.study.lang.ast.AssignNode
+import kg.study.lang.ast.ConstNode
+import kg.study.lang.ast.EmptyNode
+import kg.study.lang.ast.ExpressionNode
 import kg.study.lang.ast.IfNode
 import kg.study.lang.ast.LTNode
+import kg.study.lang.ast.Node
+import kg.study.lang.ast.PrintNode
 import kg.study.lang.ast.ProgramNode
+import kg.study.lang.ast.SeqNode
+import kg.study.lang.ast.VariableNode
 import kg.study.lang.lexer.Lexer
 import spock.lang.Specification
-import static kg.study.lang.ast.ASTAssert.assertEmptyNode
-import static kg.study.lang.ast.ASTAssert.assertExprNode
-import static kg.study.lang.ast.ASTAssert.assertPrintNode
-import static kg.study.lang.ast.ASTAssert.assertSeqNode
-import static kg.study.lang.ast.ASTAssert.shouldBeConstant
-import static kg.study.lang.ast.ASTAssert.shouldBeVariable
 
 class PredictiveParserSpec extends Specification {
+
+    def setupSpec() {
+        Node.metaClass.mixin(ASTMatchers)
+    }
+
+    def cleanupSpec() {
+        Node.metaClass = null
+    }
 
     def "parse should work"() {
         given:
@@ -24,24 +35,31 @@ class PredictiveParserSpec extends Specification {
         def result = parser.parse()
 
         then:
-        assert result instanceof ProgramNode
-        assert result.type == NodeType.PROGRAM
-        assert result.seqNode != null
-        assertSeqNode result.seqNode, 4
-        //  assert inner seq node
-        def seqIterator = result.seqNode.children.iterator()
-        assertExprNode seqIterator.next(), 'a', 3
-        //  assert if node
-        def ifNode = seqIterator.next() as IfNode
-        ifNode.type == NodeType.IF
-        //   assert lt node
-        assert ifNode.condition instanceof LTNode
-        assert ifNode.condition.type == NodeType.LT
-        shouldBeVariable ifNode.condition.left, 'a'
-        shouldBeConstant ifNode.condition.right, 0
-        //   assert expr node
-        assertExprNode ifNode.body, 'a', 5
-        assertPrintNode seqIterator.next(), 'a'
-        assertEmptyNode seqIterator.next()
+        result.shouldBe ProgramNode, {
+            seqNode.shouldBe SeqNode, {
+                next().shouldBe ExpressionNode, {
+                    child.shouldBe AssignNode, {
+                        variable.shouldBe VariableNode, 'a'
+                        value.shouldBe ConstNode, 3
+                    }
+                }
+                next().shouldBe IfNode, {
+                    condition.shouldBe LTNode, {
+                        left.shouldBe VariableNode, 'a'
+                        right.shouldBe ConstNode, 0
+                    }
+                    body.shouldBe ExpressionNode, {
+                        child.shouldBe AssignNode, {
+                            variable.shouldBe VariableNode, 'a'
+                            value.shouldBe ConstNode, 5
+                        }
+                    }
+                }
+                next().shouldBe PrintNode, {
+                    variable.shouldBe VariableNode, 'a'
+                }
+                next().shouldBe EmptyNode
+            }
+        }
     }
 }
