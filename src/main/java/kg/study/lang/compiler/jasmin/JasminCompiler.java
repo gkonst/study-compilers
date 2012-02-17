@@ -1,8 +1,8 @@
-package kg.study.lang.compiler;
+package kg.study.lang.compiler.jasmin;
 
 import kg.study.lang.ast.Node;
 
-public class JasminCompiler implements Compiler {
+public class JasminCompiler implements kg.study.lang.compiler.Compiler {
 
     private StringBuilder program;
 

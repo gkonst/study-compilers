@@ -1,4 +1,4 @@
-package kg.study.lang.compiler;
+package kg.study.lang.compiler.jasmin;
 
 import kg.study.lang.ast.AssignNode;
 import kg.study.lang.ast.ConstNode;

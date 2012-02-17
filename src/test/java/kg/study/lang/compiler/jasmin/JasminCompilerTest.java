@@ -1,4 +1,4 @@
-package kg.study.lang.compiler;
+package kg.study.lang.compiler.jasmin;
 
 import static kg.study.lang.ast.NodeFactory.assign;
 import static kg.study.lang.ast.NodeFactory.constant;
