@@ -37,7 +37,6 @@
                     <junitArtifactName>none:none</junitArtifactName>
                     <includes>
                         <include>**/*Test.java</include>
-                        <!--<include>**/*IT.java</include>-->
                     </includes>
                 </configuration>
                 <executions>
