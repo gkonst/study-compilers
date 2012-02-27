@@ -2,10 +2,10 @@ package kg.study.vm;
 
 import static org.testng.Assert.assertEquals;
 
-import kg.study.lang.PredictiveParser;
 import kg.study.lang.ast.Node;
 import kg.study.lang.compiler.SimpleCompiler;
 import kg.study.lang.lexer.Lexer;
+import kg.study.lang.parser.PredictiveParser;
 import org.testng.annotations.Test;
 
 import java.util.List;

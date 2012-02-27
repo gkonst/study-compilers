@@ -1,9 +1,10 @@
-package kg.study.lang;
+package kg.study.lang.parser;
 
 import static kg.study.lang.ast.NodeFactory.*;
 
 import kg.study.lang.ast.BinaryOperation;
 import kg.study.lang.ast.Node;
+import kg.study.lang.ast.NodeType;
 import kg.study.lang.ast.SeqNode;
 import kg.study.lang.ast.VariableNode;
 import kg.study.lang.lexer.Identifier;

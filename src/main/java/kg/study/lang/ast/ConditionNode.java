@@ -1,7 +1,5 @@
 package kg.study.lang.ast;
 
-import kg.study.lang.NodeType;
-
 public abstract class ConditionNode extends Node {
     protected BinaryOperation condition;
     protected Node body;

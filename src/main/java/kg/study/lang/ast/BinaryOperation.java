@@ -1,8 +1,7 @@
 package kg.study.lang.ast;
 
-import kg.study.lang.NodeType;
-import kg.study.lang.ParserContext;
 import kg.study.lang.lexer.Symbol;
+import kg.study.lang.parser.ParserContext;
 
 public abstract class BinaryOperation extends Node {
 

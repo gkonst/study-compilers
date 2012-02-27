@@ -4,9 +4,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.testng.Assert.assertEquals;
 
-import kg.study.lang.PredictiveParser;
 import kg.study.lang.ast.Node;
 import kg.study.lang.lexer.Lexer;
+import kg.study.lang.parser.PredictiveParser;
 import kg.study.vm.Instruction;
 import kg.study.vm.OperationCode;
 import org.testng.annotations.Test;

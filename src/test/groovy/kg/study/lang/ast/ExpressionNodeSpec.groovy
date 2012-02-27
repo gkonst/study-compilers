@@ -1,8 +1,8 @@
 package kg.study.lang.ast;
 
 
-import kg.study.lang.ParserContext
 import kg.study.lang.lexer.Lexer
+import kg.study.lang.parser.ParserContext
 import spock.lang.Specification
 
 class ExpressionNodeSpec extends Specification {

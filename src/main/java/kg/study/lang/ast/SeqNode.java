@@ -1,7 +1,5 @@
 package kg.study.lang.ast;
 
-import kg.study.lang.NodeType;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;

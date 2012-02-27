@@ -1,7 +1,5 @@
 package kg.study.lang.ast;
 
-import kg.study.lang.NodeType;
-
 public class ConstNode extends Node {
     private final int value;
 

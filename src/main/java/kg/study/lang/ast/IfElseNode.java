@@ -1,7 +1,5 @@
 package kg.study.lang.ast;
 
-import kg.study.lang.NodeType;
-
 public class IfElseNode extends ConditionNode {
     private Node elseBody;
 

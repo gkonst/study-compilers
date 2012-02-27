@@ -1,4 +1,4 @@
-package kg.study.lang;
+package kg.study.lang.parser;
 
 import kg.study.lang.lexer.Lexer;
 import kg.study.lang.lexer.Token;

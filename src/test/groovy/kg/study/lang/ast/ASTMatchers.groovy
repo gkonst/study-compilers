@@ -1,7 +1,7 @@
 package kg.study.lang.ast;
 
 
-import static kg.study.lang.NodeType.*;
+import static kg.study.lang.ast.NodeType.*
 
 final class ASTMatchers {
 

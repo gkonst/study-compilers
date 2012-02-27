@@ -1,12 +1,11 @@
 package kg.study.lang.ast;
 
-import kg.study.lang.NodeType;
-import kg.study.lang.ParserContext;
 import kg.study.lang.lexer.ComplexSymbol;
 import kg.study.lang.lexer.Identifier;
 import kg.study.lang.lexer.Symbol;
 import kg.study.lang.lexer.Token;
 import kg.study.lang.lexer.Value;
+import kg.study.lang.parser.ParserContext;
 
 public class ExpressionNode extends Node {
     private Node child;

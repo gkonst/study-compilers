@@ -1,7 +1,5 @@
 package kg.study.lang.ast;
 
-import kg.study.lang.NodeType;
-
 public class AssignNode extends Node {
     private VariableNode variable;
     private Node value;
