@@ -27,7 +27,7 @@ class JasminCompilerIntegrationSpec extends Specification {
 
     void "compiled class should work if empty node is given"() {
         given:
-        compileNodeToFile(program(null))
+        compileNodeToFile(program(null, null))
 
         when:
         assembleFileToClassInPath(CLASS_FILE.absolutePath, TEST_DIR.path)
@@ -38,9 +38,9 @@ class JasminCompilerIntegrationSpec extends Specification {
 '''
     }
 
-    void "compiled class should work and print output if set and print nodes are given"() {
+    void "compiled class should work and print output if set int const and print nodes are given"() {
         given:
-        compileNodeToFile(JasminCompilerSpec.SET_AND_PRINT_NODE)
+        compileNodeToFile(JasminCompilerSpec.SET_VARIABLE_TO_INT_AND_PRINT)
 
         when:
         assembleFileToClassInPath(CLASS_FILE.absolutePath, TEST_DIR.path)
@@ -49,6 +49,20 @@ class JasminCompilerIntegrationSpec extends Specification {
         then:
         assert out.toString() == '''Generated: target/test-jasmin-compiler/HelloWorld.class
 3
+'''
+    }
+
+    void "compiled class should work and print output if set string const and print nodes are given"() {
+        given:
+        compileNodeToFile(JasminCompilerSpec.SET_VARIABLE_TO_STRING_AND_PRINT)
+
+        when:
+        assembleFileToClassInPath(CLASS_FILE.absolutePath, TEST_DIR.path)
+        loadClassFromTestDirectory(CLASS_NAME).main()
+
+        then:
+        assert out.toString() == '''Generated: target/test-jasmin-compiler/HelloWorld.class
+foo
 '''
     }
 

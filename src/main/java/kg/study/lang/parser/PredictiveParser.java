@@ -2,6 +2,7 @@ package kg.study.lang.parser;
 
 import static kg.study.lang.ast.NodeFactory.*;
 
+import kg.study.lang.ast.AssignNode;
 import kg.study.lang.ast.BinaryOperation;
 import kg.study.lang.ast.Node;
 import kg.study.lang.ast.NodeType;
@@ -19,6 +20,7 @@ public class PredictiveParser {
 
     private final Lexer lexer;
     private Token currentToken;
+    private VariablesTable variables;
 
     public PredictiveParser(Lexer lexer) {
         this.lexer = lexer;
@@ -30,7 +32,7 @@ public class PredictiveParser {
             node = var(((Identifier) currentToken).getName());
             nextToken();
         } else if (currentToken instanceof Value) {
-            node = constant((Integer) ((Value) currentToken).getValue());
+            node = constant(((Value) currentToken).getValue());
             nextToken();
         } else {
             node = paren();
@@ -73,6 +75,10 @@ public class PredictiveParser {
         if (node.getType() == NodeType.VARIABLE && currentToken == Symbol.ASSIGN) {
             nextToken();
             node = assign((VariableNode) node, expression());
+            String name = ((AssignNode) node).getVariable().getName();
+            if (!variables.hasVariable(name)) {
+                variables.addVariable(name, TypesAnalyzer.inferType(((AssignNode) node).getValue()));
+            }
         }
         return node;
     }
@@ -141,8 +147,9 @@ public class PredictiveParser {
     }
 
     public Node parse() {
+        variables = new VariablesTable();
         nextToken();
-        Node node = program((SeqNode) statement());
+        Node node = program((SeqNode) statement(), variables);
         if (currentToken != Token.EOF) {
             throw new IllegalArgumentException("Invalid statement syntax");
         }

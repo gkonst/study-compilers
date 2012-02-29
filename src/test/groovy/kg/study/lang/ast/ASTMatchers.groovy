@@ -15,16 +15,25 @@ final class ASTMatchers {
         true
     }
 
-    static shouldBeVariable(node, name) {
+    static shouldBeVariable(node, params) {
         shouldBe(node, VariableNode)
-        assert node.name == name
-        true
+        if (params instanceof Map) {
+            assert node.name == params.name
+            assert params.in.hasVariable(node.name)
+            assert params.in.getVariable(node.name).type == params.type
+        } else {
+            assert node.name == params
+        }
     }
 
-    static shouldBe(node, Class cls, Object... params) {
+    static shouldBe(node, Map params, Class cls) {
         shouldBe(node, cls)
         findShould(node).invoke(node, params)
-        true
+    }
+
+    static void shouldBe(node, Class cls, Object... params) {
+        shouldBe(node, cls)
+        findShould(node).invoke(node, params)
     }
 
     static void shouldBe(node, Class cls) {

@@ -1,14 +1,14 @@
 package kg.study.lang.ast;
 
 public class ConstNode extends Node {
-    private final int value;
+    private final Object value;
 
-    protected ConstNode(int value) {
+    protected ConstNode(Object value) {
         super(NodeType.CONST);
         this.value = value;
     }
 
-    public int getValue() {
+    public Object getValue() {
         return value;
     }
 

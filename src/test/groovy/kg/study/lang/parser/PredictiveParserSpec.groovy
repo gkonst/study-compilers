@@ -36,27 +36,28 @@ class PredictiveParserSpec extends Specification {
 
         then:
         result.shouldBe ProgramNode, {
+            def variables = variablesTable
             seqNode.shouldBe SeqNode, {
                 next().shouldBe ExpressionNode, {
                     child.shouldBe AssignNode, {
-                        variable.shouldBe VariableNode, 'a'
+                        variable.shouldBe VariableNode, name: 'a', type: Integer, in: variables
                         value.shouldBe ConstNode, 3
                     }
                 }
                 next().shouldBe IfNode, {
                     condition.shouldBe LTNode, {
-                        left.shouldBe VariableNode, 'a'
+                        left.shouldBe VariableNode, name: 'a', type: Integer, in: variables
                         right.shouldBe ConstNode, 0
                     }
                     body.shouldBe ExpressionNode, {
                         child.shouldBe AssignNode, {
-                            variable.shouldBe VariableNode, 'a'
+                            variable.shouldBe VariableNode, name: 'a', type: Integer, in: variables
                             value.shouldBe ConstNode, 5
                         }
                     }
                 }
                 next().shouldBe PrintNode, {
-                    variable.shouldBe VariableNode, 'a'
+                    variable.shouldBe VariableNode, name: 'a', type: Integer, in: variables
                 }
                 next().shouldBe EmptyNode
             }

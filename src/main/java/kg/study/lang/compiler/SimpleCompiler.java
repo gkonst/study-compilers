@@ -62,7 +62,7 @@ public class SimpleCompiler implements Compiler {
                 addInstruction(IFETCH, getLocalIndex(((VariableNode) node).getName()));
                 break;
             case CONST:
-                addInstruction(IPUSH, ((ConstNode) node).getValue());
+                addInstruction(IPUSH, (Integer) ((ConstNode) node).getValue());
                 break;
             case SUM:
                 compile(((SumNode) node).getLeft());

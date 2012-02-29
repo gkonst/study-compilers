@@ -1,11 +1,13 @@
 package kg.study.lang.ast;
 
+import kg.study.lang.parser.VariablesTable;
+
 public class NodeFactory {
     public static VariableNode var(String name) {
         return new VariableNode(name);
     }
 
-    public static ConstNode constant(int value) {
+    public static ConstNode constant(Object value) {
         return new ConstNode(value);
     }
 
@@ -25,8 +27,8 @@ public class NodeFactory {
         return new AssignNode(var, constant);
     }
 
-    public static ProgramNode program(SeqNode child) {
-        return new ProgramNode(child);
+    public static ProgramNode program(SeqNode child, VariablesTable variablesTable) {
+        return new ProgramNode(child, variablesTable);
     }
 
     public static WhileNode whileNode(BinaryOperation condition, Node body) {
